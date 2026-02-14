@@ -24,6 +24,7 @@ function Toolbar({ editor }: { editor: Editor | null }) {
     <div className="flex flex-wrap items-center gap-1 p-2 border-b border-glass-border bg-white/5 sticky top-0 z-10 backdrop-blur-md">
       <Toggle
         size="sm"
+        type="button"
         pressed={editor!.isActive('bold')}
         onPressedChange={() => editor!.chain().focus().toggleBold().run()}
         aria-label="Bold"
@@ -33,6 +34,7 @@ function Toolbar({ editor }: { editor: Editor | null }) {
       
       <Toggle
         size="sm"
+        type="button"
         pressed={editor!.isActive('italic')}
         onPressedChange={() => editor!.chain().focus().toggleItalic().run()}
         aria-label="Italic"
@@ -42,6 +44,7 @@ function Toolbar({ editor }: { editor: Editor | null }) {
 
       <Toggle
         size="sm"
+        type="button"
         pressed={editor!.isActive('strike')}
         onPressedChange={() => editor!.chain().focus().toggleStrike().run()}
         aria-label="Strikethrough"
@@ -53,6 +56,7 @@ function Toolbar({ editor }: { editor: Editor | null }) {
 
       <Toggle
         size="sm"
+        type="button"
         pressed={editor!.isActive('heading', { level: 1 })}
         onPressedChange={() => editor!.chain().focus().toggleHeading({ level: 1 }).run()}
         aria-label="H1"
@@ -62,6 +66,7 @@ function Toolbar({ editor }: { editor: Editor | null }) {
 
       <Toggle
         size="sm"
+        type="button"
         pressed={editor!.isActive('heading', { level: 2 })}
         onPressedChange={() => editor!.chain().focus().toggleHeading({ level: 2 }).run()}
         aria-label="H2"
@@ -73,6 +78,7 @@ function Toolbar({ editor }: { editor: Editor | null }) {
 
       <Toggle
         size="sm"
+        type="button"
         pressed={editor!.isActive('bulletList')}
         onPressedChange={() => editor!.chain().focus().toggleBulletList().run()}
         aria-label="Bullet List"
@@ -82,6 +88,7 @@ function Toolbar({ editor }: { editor: Editor | null }) {
 
       <Toggle
         size="sm"
+        type="button"
         pressed={editor!.isActive('orderedList')}
         onPressedChange={() => editor!.chain().focus().toggleOrderedList().run()}
         aria-label="Ordered List"
@@ -94,6 +101,7 @@ function Toolbar({ editor }: { editor: Editor | null }) {
       <Button
         variant="ghost"
         size="sm"
+        type="button"
         onClick={addImage}
         className="h-8 w-8 p-0"
         title="Inserir Imagem"
@@ -106,6 +114,7 @@ function Toolbar({ editor }: { editor: Editor | null }) {
       <Button
         variant="ghost"
         size="sm"
+        type="button"
         onClick={() => editor!.chain().focus().undo().run()}
         disabled={!editor!.can().undo()}
         className="h-8 w-8 p-0"
@@ -116,6 +125,7 @@ function Toolbar({ editor }: { editor: Editor | null }) {
       <Button
         variant="ghost"
         size="sm"
+        type="button"
         onClick={() => editor!.chain().focus().redo().run()}
         disabled={!editor!.can().redo()}
         className="h-8 w-8 p-0"

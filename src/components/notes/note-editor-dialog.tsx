@@ -83,7 +83,10 @@ export function NoteEditorDialog({ open, onOpenChange, note }: NoteEditorDialogP
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-5xl h-[85vh] flex flex-col p-0 gap-0 overflow-hidden">
+      <DialogContent 
+        className="max-w-5xl h-[85vh] flex flex-col p-0 gap-0 overflow-hidden"
+        onInteractOutside={(e) => e.preventDefault()}
+      >
         <DialogHeader className="px-6 py-4 border-b border-glass-border bg-white/5 shrink-0">
           <div className="flex items-center justify-between">
             <div className="space-y-1">

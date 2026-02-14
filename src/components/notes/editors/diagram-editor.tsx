@@ -5,15 +5,14 @@ import {
   ReactFlow,
   Controls,
   Background,
-  applyNodeChanges,
-  applyEdgeChanges,
+  useNodesState,
+  useEdgesState,
   addEdge,
   Connection,
   Edge,
   Node,
-  NodeChange,
-  EdgeChange,
   MiniMap,
+  Panel,
 } from '@xyflow/react'
 import '@xyflow/react/dist/style.css'
 
@@ -54,8 +53,8 @@ interface DiagramEditorProps {
 }
 
 export function DiagramEditor({ content, onChange }: DiagramEditorProps) {
-  const [nodes, setNodes] = useState<Node[]>([])
-  const [edges, setEdges] = useState<Edge[]>([])
+  const [nodes, setNodes, onNodesChange] = useNodesState<Node>(initialNodes)
+  const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>(initialEdges)
   const [isInitialized, setIsInitialized] = useState(false)
 
   /* Load initial state */
@@ -77,12 +76,13 @@ export function DiagramEditor({ content, onChange }: DiagramEditorProps) {
       // Fallback to default
     }
 
+    /* We use setNodes/setEdges from the hooks which handle internal state */
     requestAnimationFrame(() => {
       setNodes(initialNodesToSet)
       setEdges(initialEdgesToSet)
       setIsInitialized(true)
     })
-  }, [content, isInitialized])
+  }, [content, isInitialized, setNodes, setEdges])
 
   /* Save state on changes */
   useEffect(() => {
@@ -91,31 +91,50 @@ export function DiagramEditor({ content, onChange }: DiagramEditorProps) {
     onChange(json)
   }, [nodes, edges, isInitialized, onChange])
 
-  const onNodesChange = useCallback(
-    (changes: NodeChange[]) => setNodes((nds) => applyNodeChanges(changes, nds)),
-    []
-  )
-
-  const onEdgesChange = useCallback(
-    (changes: EdgeChange[]) => setEdges((eds) => applyEdgeChanges(changes, eds)),
-    []
-  )
-
   const onConnect = useCallback(
     (params: Connection) => setEdges((eds) => addEdge({ ...params, animated: true, style: { stroke: '#94a3b8' } }, eds)),
-    []
+    [setEdges]
+  )
+
+  const addNode = useCallback(() => {
+    const id = crypto.randomUUID()
+    const newNode: Node = {
+      id,
+      position: { x: Math.random() * 400, y: Math.random() * 400 },
+      data: { label: 'Nova Ideia' },
+      style: { background: '#1e293b', color: '#fff', border: '1px solid #334155' },
+    }
+    setNodes((nds) => nds.concat(newNode))
+  }, [setNodes])
+
+  const onNodeClick = useCallback(
+    (_: React.MouseEvent, node: Node) => {
+      const newLabel = window.prompt('Editar nome do nó:', node.data.label as string)
+      if (newLabel !== null) {
+        setNodes((nds) =>
+          nds.map((n) => {
+            if (n.id === node.id) {
+              return { ...n, data: { ...n.data, label: newLabel } }
+            }
+            return n
+          })
+        )
+      }
+    },
+    [setNodes]
   )
 
   if (!isInitialized) return null
 
   return (
-    <div className="h-[60vh] w-full border border-glass-border rounded-lg overflow-hidden bg-black/90">
+    <div className="h-[60vh] w-full border border-glass-border rounded-lg overflow-hidden bg-black/90 relative">
       <ReactFlow
         nodes={nodes}
         edges={edges}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}
+        onNodeClick={onNodeClick}
         fitView
         colorMode="dark"
       >
@@ -127,6 +146,15 @@ export function DiagramEditor({ content, onChange }: DiagramEditorProps) {
           maskColor="rgba(0,0,0, 0.7)"
           className="bg-black/50 border border-glass-border"
         />
+        <Panel position="top-left" className="bg-glass border border-glass-border p-2 rounded-md">
+          <button
+            type="button"
+            onClick={addNode}
+            className="px-3 py-1.5 bg-primary text-primary-foreground rounded text-sm hover:bg-primary/90 transition-colors"
+          >
+            + Adicionar Nó
+          </button>
+        </Panel>
       </ReactFlow>
     </div>
   )
