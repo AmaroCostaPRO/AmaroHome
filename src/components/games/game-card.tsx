@@ -42,8 +42,8 @@ export function GameCard({ game }: GameCardProps) {
           src={game.cover_url}
           alt={game.title}
           fill
+          sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 20vw"
           className="object-cover"
-          unoptimized
         />
       ) : (
         <div className="absolute inset-0 bg-linear-to-br from-accent/20 via-surface to-elevated flex items-center justify-center p-4">

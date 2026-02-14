@@ -281,7 +281,8 @@ export function AddMediaDialog({ children }: AddMediaDialogProps) {
                         alt={track.album.name}
                         fill
                         className="object-cover"
-                        unoptimized
+                        unoptimized={false}
+                        sizes="40px"
                       />
                     ) : (
                       <div className="w-full h-full bg-white/5 flex items-center justify-center">
@@ -379,7 +380,8 @@ export function AddMediaDialog({ children }: AddMediaDialogProps) {
                     alt="Preview do vídeo"
                     fill
                     className="object-cover"
-                    unoptimized
+                    unoptimized={false}
+                    sizes="(max-width: 768px) 100vw, 500px"
                   />
                   <div className="absolute inset-0 bg-linear-to-t from-black/40 to-transparent" />
                   <div className="absolute bottom-2 left-3 right-3">

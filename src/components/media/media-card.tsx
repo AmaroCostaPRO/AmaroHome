@@ -55,12 +55,12 @@ export function MediaCard({ item, onPlay }: MediaCardProps) {
       {/* Capa */}
       <div className={`relative overflow-hidden ${isYouTube ? 'aspect-video' : 'aspect-square'}`}>
         {item.cover_url ? (
-          <Image
+            <Image
             src={item.cover_url}
             alt={item.title}
             fill
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             className="object-cover transition-transform duration-500 group-hover:scale-105"
-            unoptimized
           />
         ) : (
           <div className="absolute inset-0 bg-linear-to-br from-accent/20 via-surface to-elevated flex items-center justify-center">
