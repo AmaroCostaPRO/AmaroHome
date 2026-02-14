@@ -1,0 +1,133 @@
+'use client'
+
+import { useState, useCallback, useEffect } from 'react'
+import {
+  ReactFlow,
+  Controls,
+  Background,
+  applyNodeChanges,
+  applyEdgeChanges,
+  addEdge,
+  Connection,
+  Edge,
+  Node,
+  NodeChange,
+  EdgeChange,
+  MiniMap,
+} from '@xyflow/react'
+import '@xyflow/react/dist/style.css'
+
+/* ── Initial Nodes (Example) ──────────────────────────────────── */
+
+const initialNodes: Node[] = [
+  {
+    id: '1',
+    data: { label: 'Ideia Central' },
+    position: { x: 250, y: 50 },
+    type: 'input',
+    style: { background: '#1e293b', color: '#fff', border: '1px solid #334155' },
+  },
+  {
+    id: '2',
+    data: { label: 'Desdobramento A' },
+    position: { x: 100, y: 200 },
+    style: { background: '#1e293b', color: '#fff', border: '1px solid #334155' },
+  },
+  {
+    id: '3',
+    data: { label: 'Desdobramento B' },
+    position: { x: 400, y: 200 },
+    style: { background: '#1e293b', color: '#fff', border: '1px solid #334155' },
+  },
+]
+
+const initialEdges: Edge[] = [
+  { id: 'e1-2', source: '1', target: '2', animated: true, style: { stroke: '#94a3b8' } },
+  { id: 'e1-3', source: '1', target: '3', animated: true, style: { stroke: '#94a3b8' } },
+]
+
+/* ── DiagramEditor ────────────────────────────────────────────── */
+
+interface DiagramEditorProps {
+  content: string
+  onChange: (json: string) => void
+}
+
+export function DiagramEditor({ content, onChange }: DiagramEditorProps) {
+  const [nodes, setNodes] = useState<Node[]>([])
+  const [edges, setEdges] = useState<Edge[]>([])
+  const [isInitialized, setIsInitialized] = useState(false)
+
+  /* Load initial state */
+  useEffect(() => {
+    if (isInitialized) return
+
+    let initialNodesToSet = initialNodes
+    let initialEdgesToSet = initialEdges
+
+    try {
+      if (content) {
+        const json = JSON.parse(content)
+        if (json.nodes && json.edges) {
+          initialNodesToSet = json.nodes
+          initialEdgesToSet = json.edges
+        }
+      }
+    } catch {
+      // Fallback to default
+    }
+
+    requestAnimationFrame(() => {
+      setNodes(initialNodesToSet)
+      setEdges(initialEdgesToSet)
+      setIsInitialized(true)
+    })
+  }, [content, isInitialized])
+
+  /* Save state on changes */
+  useEffect(() => {
+    if (!isInitialized) return
+    const json = JSON.stringify({ nodes, edges })
+    onChange(json)
+  }, [nodes, edges, isInitialized, onChange])
+
+  const onNodesChange = useCallback(
+    (changes: NodeChange[]) => setNodes((nds) => applyNodeChanges(changes, nds)),
+    []
+  )
+
+  const onEdgesChange = useCallback(
+    (changes: EdgeChange[]) => setEdges((eds) => applyEdgeChanges(changes, eds)),
+    []
+  )
+
+  const onConnect = useCallback(
+    (params: Connection) => setEdges((eds) => addEdge({ ...params, animated: true, style: { stroke: '#94a3b8' } }, eds)),
+    []
+  )
+
+  if (!isInitialized) return null
+
+  return (
+    <div className="h-[60vh] w-full border border-glass-border rounded-lg overflow-hidden bg-black/90">
+      <ReactFlow
+        nodes={nodes}
+        edges={edges}
+        onNodesChange={onNodesChange}
+        onEdgesChange={onEdgesChange}
+        onConnect={onConnect}
+        fitView
+        colorMode="dark"
+      >
+        <Background gap={16} size={1} color="#334155" />
+        <Controls className="bg-white/10 border-none fill-white text-white" />
+        <MiniMap 
+          nodeStrokeColor="#334155" 
+          nodeColor="#1e293b" 
+          maskColor="rgba(0,0,0, 0.7)"
+          className="bg-black/50 border border-glass-border"
+        />
+      </ReactFlow>
+    </div>
+  )
+}

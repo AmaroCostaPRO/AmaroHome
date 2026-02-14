@@ -1,7 +1,7 @@
 'use client'
 
 import { useTransition } from 'react'
-import { Pin, PinOff, Trash2 } from 'lucide-react'
+import { Pin, PinOff, Trash2, FileText, Network } from 'lucide-react'
 import { deleteNote, togglePin } from '@/app/notes/actions'
 import type { Note } from '@/app/notes/actions'
 
@@ -60,6 +60,16 @@ export function NoteCard({ note, onEdit }: NoteCardProps) {
         <h3 className="text-sm font-semibold text-foreground leading-snug line-clamp-2 flex-1">
           {note.is_pinned && (
             <span className="inline-block mr-1.5 text-accent text-xs align-middle">📌</span>
+          )}
+          {note.type === 'board' && (
+            <span className="inline-block mr-1.5 align-middle" title="Board / Diagrama">
+              <Network className="w-3.5 h-3.5 text-blue-400 inline" />
+            </span>
+          )}
+          {(!note.type || note.type === 'document') && (
+             <span className="inline-block mr-1.5 align-middle" title="Documento">
+              <FileText className="w-3.5 h-3.5 text-emerald-400 inline" />
+            </span>
           )}
           {note.title}
         </h3>

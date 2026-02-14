@@ -1,8 +1,8 @@
 'use client'
 
-import { useRef, useEffect, useCallback } from 'react'
+import { useRef, useState, useEffect } from 'react'
 import { useFormStatus } from 'react-dom'
-import { Loader2 } from 'lucide-react'
+import { Loader2, FileText, Network } from 'lucide-react'
 import { saveNote } from '@/app/notes/actions'
 import type { Note } from '@/app/notes/actions'
 import {
@@ -14,6 +14,9 @@ import {
   DialogClose,
 } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { RichTextEditor } from './editors/rich-text-editor'
+import { DiagramEditor } from './editors/diagram-editor'
 
 /* ── Submit Button com Loading ────────────────────────────────── */
 
@@ -21,7 +24,7 @@ function SubmitButton() {
   const { pending } = useFormStatus()
 
   return (
-    <Button type="submit" disabled={pending} className="w-full mt-2">
+    <Button type="submit" disabled={pending} className="w-full sm:w-auto">
       {pending ? (
         <>
           <Loader2 className="w-4 h-4 animate-spin" />
@@ -32,13 +35,6 @@ function SubmitButton() {
       )}
     </Button>
   )
-}
-
-/* ── Auto-resize Textarea ─────────────────────────────────────── */
-
-function autoResize(el: HTMLTextAreaElement) {
-  el.style.height = 'auto'
-  el.style.height = `${el.scrollHeight}px`
 }
 
 /* ── Componente Principal ─────────────────────────────────────── */
@@ -52,20 +48,32 @@ interface NoteEditorDialogProps {
 export function NoteEditorDialog({ open, onOpenChange, note }: NoteEditorDialogProps) {
   const formRef = useRef<HTMLFormElement>(null)
   const closeRef = useRef<HTMLButtonElement>(null)
-  const textareaRef = useRef<HTMLTextAreaElement>(null)
 
-  const handleAutoResize = useCallback(() => {
-    if (textareaRef.current) autoResize(textareaRef.current)
-  }, [])
+  const [activeType, setActiveType] = useState<'document' | 'board'>('document')
+  const [content, setContent] = useState('')
 
-  /* Auto-resize quando abre com conteúdo */
+  /* Reset state on open */
   useEffect(() => {
-    if (open) {
-      requestAnimationFrame(handleAutoResize)
+    if (!open) return // Only run logic when dialog is open or becomes open
+    
+    if (note) {
+      requestAnimationFrame(() => {
+        setActiveType(note.type)
+        setContent(note.content || '')
+      })
+    } else {
+      requestAnimationFrame(() => {
+        setActiveType('document')
+        setContent('')
+      })
     }
-  }, [open, handleAutoResize])
+  }, [open, note])
 
   async function handleAction(formData: FormData) {
+    /* Injetar o conteúdo do estado no FormData antes de enviar */
+    formData.set('content', content)
+    formData.set('type', activeType)
+    
     await saveNote(formData)
     formRef.current?.reset()
     closeRef.current?.click()
@@ -75,44 +83,70 @@ export function NoteEditorDialog({ open, onOpenChange, note }: NoteEditorDialogP
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl">
-        <DialogHeader>
-          <DialogTitle>{isEditing ? 'Editar Nota' : 'Nova Nota'}</DialogTitle>
-          <DialogDescription>
-            {isEditing
-              ? 'Atualize o conteúdo da sua nota.'
-              : 'Escreva uma nova ideia, lembrete ou anotação.'}
-          </DialogDescription>
+      <DialogContent className="max-w-5xl h-[85vh] flex flex-col p-0 gap-0 overflow-hidden">
+        <DialogHeader className="px-6 py-4 border-b border-glass-border bg-white/5 shrink-0">
+          <div className="flex items-center justify-between">
+            <div className="space-y-1">
+              <DialogTitle>{isEditing ? 'Editar Nota' : 'Nova Nota'}</DialogTitle>
+              <DialogDescription>
+                {isEditing ? 'Edite sua nota existente.' : 'Crie um novo documento ou diagrama.'}
+              </DialogDescription>
+            </div>
+            
+            {!isEditing && (
+              <Tabs value={activeType} onValueChange={(v: string) => setActiveType(v as 'document' | 'board')}>
+                <TabsList className="grid w-[200px] grid-cols-2">
+                  <TabsTrigger value="document" className="flex gap-2">
+                    <FileText className="w-4 h-4" /> Doc
+                  </TabsTrigger>
+                  <TabsTrigger value="board" className="flex gap-2">
+                    <Network className="w-4 h-4" /> Board
+                  </TabsTrigger>
+                </TabsList>
+              </Tabs>
+            )}
+          </div>
         </DialogHeader>
 
-        <form ref={formRef} action={handleAction} className="flex flex-col gap-4">
+        <form ref={formRef} action={handleAction} className="flex-1 flex flex-col min-h-0">
           {/* ID oculto (modo edição) */}
           {note && <input type="hidden" name="id" value={note.id} />}
 
-          {/* Título */}
-          <input
-            name="title"
-            defaultValue={note?.title ?? ''}
-            placeholder="Título da nota..."
-            className="w-full bg-transparent text-lg font-semibold text-foreground placeholder:text-muted/50 border-none outline-none py-1"
-          />
+          {/* Área de Edição (Scrollable) */}
+          <div className="flex-1 overflow-y-auto p-6 bg-background/50">
+            <div className="space-y-4 max-w-4xl mx-auto h-full flex flex-col">
+              {/* Título sem bordas */}
+              <input
+                name="title"
+                defaultValue={note?.title ?? ''}
+                placeholder="Título da nota..."
+                className="w-full bg-transparent text-3xl font-bold text-foreground placeholder:text-muted/30 border-none outline-none py-2"
+                autoComplete="off"
+              />
 
-          {/* Conteúdo */}
-          <textarea
-            ref={textareaRef}
-            name="content"
-            defaultValue={note?.content ?? ''}
-            placeholder="Comece a escrever..."
-            rows={6}
-            onInput={(e) => autoResize(e.currentTarget)}
-            className="w-full bg-white/3 border border-glass-border rounded-sm px-3 py-3 text-sm text-foreground placeholder:text-muted resize-none transition-all duration-(--transition-fast) hover:border-(--glass-border-hover) focus:outline-none focus:border-accent/40 focus:ring-1 focus:ring-accent/20 focus:bg-white/5 min-h-[120px]"
-          />
+              {/* Editor Switcher */}
+              <div className="flex-1 min-h-[400px]">
+                {activeType === 'document' ? (
+                  <RichTextEditor 
+                    content={content} 
+                    onChange={setContent} 
+                  />
+                ) : (
+                  <DiagramEditor 
+                    content={content} 
+                    onChange={setContent} 
+                  />
+                )}
+              </div>
+            </div>
+          </div>
 
-          {/* Botão */}
-          <SubmitButton />
+          {/* Footer Actions */}
+          <div className="px-6 py-4 border-t border-glass-border bg-white/5 flex justify-end shrink-0">
+            <SubmitButton />
+          </div>
         </form>
 
-        {/* Ref oculta para fechar o modal programaticamente */}
         <DialogClose ref={closeRef} className="hidden" />
       </DialogContent>
     </Dialog>

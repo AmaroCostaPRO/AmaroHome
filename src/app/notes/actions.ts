@@ -13,6 +13,7 @@ export interface Note {
   is_pinned: boolean
   created_at: string
   updated_at: string
+  type: 'document' | 'board'
 }
 
 /* ── Buscar Notas ─────────────────────────────────────────────── */
@@ -25,7 +26,7 @@ export async function getNotes(): Promise<Note[]> {
 
   const { data, error } = await supabase
     .from('notes')
-    .select('id, user_id, title, content, is_pinned, created_at, updated_at')
+    .select('id, user_id, title, content, is_pinned, created_at, updated_at, type')
     .eq('user_id', user.id)
     .order('is_pinned', { ascending: false })
     .order('created_at', { ascending: false })
@@ -45,13 +46,15 @@ export async function saveNote(formData: FormData) {
 
   const id = formData.get('id') as string | null
   const title = (formData.get('title') as string) || 'Sem título'
+  const type = (formData.get('type') as 'document' | 'board') || 'document'
+  // Content agora é JSON stringificado, mas mantemos como string no banco
   const content = (formData.get('content') as string) || ''
 
   if (id) {
     /* Atualizar */
     const { error } = await supabase
       .from('notes')
-      .update({ title, content, updated_at: new Date().toISOString() })
+      .update({ title, content, type, updated_at: new Date().toISOString() })
       .eq('id', id)
       .eq('user_id', user.id)
 
@@ -61,6 +64,7 @@ export async function saveNote(formData: FormData) {
     const { error } = await supabase.from('notes').insert({
       title,
       content,
+      type,
       user_id: user.id,
     })
 
