@@ -2,11 +2,11 @@
 
 import { useState, useRef, useTransition, useCallback } from 'react'
 import { useFormStatus } from 'react-dom'
-import { Search, Loader2, Plus, Music, Video, CheckCircle2 } from 'lucide-react'
+import { Search, Loader2, Plus, Music, Video, CheckCircle2, Folder } from 'lucide-react'
 import Image from 'next/image'
 import { Tabs } from 'radix-ui'
 import { saveMedia } from '@/app/media/actions'
-import type { MediaPlatform } from '@/app/media/actions'
+import type { MediaPlatform, Playlist } from '@/app/media/actions'
 import {
   Dialog,
   DialogContent,
@@ -99,11 +99,13 @@ function YouTubeSubmitButton({ disabled }: { disabled?: boolean }) {
 
 interface AddMediaDialogProps {
   children: React.ReactNode
+  playlists: Playlist[]
 }
 
-export function AddMediaDialog({ children }: AddMediaDialogProps) {
+export function AddMediaDialog({ children, playlists }: AddMediaDialogProps) {
   const [open, setOpen] = useState(false)
   const [activeTab, setActiveTab] = useState('spotify')
+  const [selectedPlaylistId, setSelectedPlaylistId] = useState<string>('')
 
   /* Spotify state */
   const [query, setQuery] = useState('')
@@ -150,7 +152,11 @@ export function AddMediaDialog({ children }: AddMediaDialogProps) {
         cover_url: track.album.images[0]?.url ?? null,
         external_url: track.external_urls.spotify,
         platform: 'spotify' as MediaPlatform,
+        playlist_id: selectedPlaylistId || undefined,
       })
+      setOpen(false) // Close on success
+      setResults([])
+      setQuery('')
     } finally {
       setSavingId(null)
     }
@@ -204,6 +210,7 @@ export function AddMediaDialog({ children }: AddMediaDialogProps) {
         external_url: url,
         cover_url: thumbnail || undefined,
         platform: 'youtube',
+        playlist_id: selectedPlaylistId || undefined,
       })
       ytFormRef.current?.reset()
       setYtUrl('')
@@ -218,13 +225,38 @@ export function AddMediaDialog({ children }: AddMediaDialogProps) {
     <Dialog open={open} onOpenChange={setOpen}>
       {children}
 
-      <DialogContent className="max-w-lg">
+      <DialogContent className="max-w-lg glass-panel border-white/10">
         <DialogHeader>
           <DialogTitle>Adicionar Media</DialogTitle>
           <DialogDescription>
             Salve músicas do Spotify ou vídeos do YouTube na sua curadoria.
           </DialogDescription>
         </DialogHeader>
+
+        {/* Playlist Selection */}
+        <div className="mb-4">
+          <label className="text-xs font-medium text-secondary mb-1.5 flex items-center gap-2">
+            <Folder className="w-3.5 h-3.5" />
+            Salvar em Playlist (Opcional)
+          </label>
+          <div className="relative">
+            <select
+              value={selectedPlaylistId}
+              onChange={(e) => setSelectedPlaylistId(e.target.value)}
+              className="w-full bg-black/20 border border-white/10 rounded-md py-2 px-3 text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-indigo-500/50 appearance-none cursor-pointer"
+            >
+              <option value="" className="bg-slate-900 text-muted">Sem Playlist (Geral)</option>
+              {playlists.map((playlist) => (
+                <option key={playlist.id} value={playlist.id} className="bg-slate-900 text-foreground">
+                  {playlist.title}
+                </option>
+              ))}
+            </select>
+            <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none opacity-50">
+               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+            </div>
+          </div>
+        </div>
 
         <Tabs.Root value={activeTab} onValueChange={setActiveTab}>
           <Tabs.List className="flex gap-1 p-1 glass-panel w-full mb-4">
@@ -260,9 +292,9 @@ export function AddMediaDialog({ children }: AddMediaDialogProps) {
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); handleSearch() } }}
-                className="flex-1"
+                className="flex-1 bg-black/20 border-white/10"
               />
-              <Button type="button" onClick={handleSearch} disabled={searching}>
+              <Button type="button" onClick={handleSearch} disabled={searching} variant="secondary">
                 {searching ? <Loader2 className="w-4 h-4 animate-spin" /> : <Search className="w-4 h-4" />}
               </Button>
             </div>
@@ -340,6 +372,7 @@ export function AddMediaDialog({ children }: AddMediaDialogProps) {
                     onChange={(e) => setYtUrl(e.target.value)}
                     onBlur={(e) => handleYouTubeFetch(e.target.value)}
                     required
+                    className="bg-black/20 border-white/10"
                   />
                   {isFetching && (
                     <div className="absolute right-3 top-1/2 -translate-y-1/2">
@@ -366,6 +399,7 @@ export function AddMediaDialog({ children }: AddMediaDialogProps) {
                   value={ytTitle}
                   onChange={(e) => setYtTitle(e.target.value)}
                   required
+                  className="bg-black/20 border-white/10"
                 />
               </div>
 

@@ -1,26 +1,38 @@
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
-import { getMedia } from './actions'
+import { getMedia, getPlaylists } from './actions'
 import { PageTransition } from '@/components/layout/page-transition'
 import { MediaClient } from '@/components/media/media-client'
 import { AddMediaDialog } from '@/components/media/add-media-dialog'
+import { PlaylistSidebar } from '@/components/media/playlist-sidebar'
 import { DialogTrigger } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { Plus } from 'lucide-react'
 
 /* ── Página ───────────────────────────────────────────────────── */
 
-export default async function MediaPage() {
+interface MediaPageProps {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>
+}
+
+export default async function MediaPage({ searchParams }: MediaPageProps) {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
 
   if (!user) redirect('/login')
 
-  const media = await getMedia()
+  const params = await searchParams
+  const currentPlaylistId = typeof params.playlist === 'string' ? params.playlist : undefined
+
+  // Parallel data fetching
+  const [media, playlists] = await Promise.all([
+    getMedia(currentPlaylistId),
+    getPlaylists()
+  ])
 
   return (
     <PageTransition>
-      <div className="space-y-8 max-w-6xl">
+      <div className="space-y-8 max-w-7xl mx-auto">
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
           <div className="space-y-1">
@@ -32,7 +44,7 @@ export default async function MediaPage() {
             </p>
           </div>
 
-          <AddMediaDialog>
+          <AddMediaDialog playlists={playlists}>
             <DialogTrigger asChild>
               <Button>
                 <Plus className="w-4 h-4" />
@@ -42,8 +54,16 @@ export default async function MediaPage() {
           </AddMediaDialog>
         </div>
 
-        {/* Grid + Players (Client Component) */}
-        <MediaClient media={media} />
+        {/* Content Layout */}
+        <div className="flex flex-col md:flex-row gap-8 items-start">
+          {/* Sidebar */}
+          <PlaylistSidebar playlists={playlists} />
+
+          {/* Grid + Players (Client Component) */}
+          <div className="flex-1 w-full min-w-0">
+             <MediaClient media={media} playlists={playlists} />
+          </div>
+        </div>
       </div>
     </PageTransition>
   )

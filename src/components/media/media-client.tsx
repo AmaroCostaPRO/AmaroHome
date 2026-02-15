@@ -14,7 +14,7 @@ import {
 import { DialogTrigger } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { usePlayer } from '@/contexts/player-context'
-import type { MediaItem } from '@/app/media/actions'
+import type { MediaItem, Playlist } from '@/app/media/actions'
 
 /* ── Helper: Extrair YouTube ID ───────────────────────────────── */
 
@@ -36,9 +36,10 @@ function extractYouTubeId(url: string): string | null {
 
 interface MediaClientProps {
   media: MediaItem[]
+  playlists: Playlist[]
 }
 
-export function MediaClient({ media }: MediaClientProps) {
+export function MediaClient({ media, playlists }: MediaClientProps) {
   const [playingYoutube, setPlayingYoutube] = useState<MediaItem | null>(null)
   const { playSpotify } = usePlayer()
 
@@ -78,7 +79,7 @@ export function MediaClient({ media }: MediaClientProps) {
           <p className="text-sm text-muted text-center max-w-xs mb-5">
             Adicione suas músicas favoritas do Spotify e vídeos do YouTube para montar sua biblioteca pessoal.
           </p>
-          <AddMediaDialog>
+          <AddMediaDialog playlists={playlists}>
             <DialogTrigger asChild>
               <Button variant="outline">
                 <Plus className="w-4 h-4" />
