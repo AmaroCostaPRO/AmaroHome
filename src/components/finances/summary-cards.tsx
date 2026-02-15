@@ -19,60 +19,57 @@ interface SummaryCardsProps {
 /* ── Componente ───────────────────────────────────────────────── */
 
 export function SummaryCards({ income, expense, balance }: SummaryCardsProps) {
-  const cards = [
-    {
-      label: 'Receitas',
-      value: income,
-      icon: TrendingUp,
-      color: 'text-emerald-400',
-      borderColor: 'border-emerald-500/30',
-      glowColor: 'shadow-[0_0_20px_rgba(34,197,94,0.12)]',
-      bgIcon: 'bg-emerald-500/10',
-    },
-    {
-      label: 'Despesas',
-      value: expense,
-      icon: TrendingDown,
-      color: 'text-red-400',
-      borderColor: 'border-red-500/30',
-      glowColor: 'shadow-[0_0_20px_rgba(239,68,68,0.12)]',
-      bgIcon: 'bg-red-500/10',
-    },
-    {
-      label: 'Saldo',
-      value: balance,
-      icon: Wallet,
-      color: balance >= 0 ? 'text-foreground' : 'text-red-400',
-      borderColor: 'border-white/8',
-      glowColor: 'shadow-[0_0_20px_rgba(255,255,255,0.04)]',
-      bgIcon: 'bg-white/5',
-    },
-  ]
+
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-      {cards.map((card) => (
-        <div
-          key={card.label}
-          className={`
-            glass-card p-5 border ${card.borderColor} ${card.glowColor}
-            transition-all duration-(--transition-base)
-            hover:scale-[1.02] hover:${card.glowColor}
-          `}
-        >
-          <div className="flex items-center justify-between mb-3">
-            <span className="text-sm text-secondary font-medium">
-              {card.label}
-            </span>
-            <div className={`w-9 h-9 rounded-lg ${card.bgIcon} flex items-center justify-center`}>
-              <card.icon className={`w-5 h-5 ${card.color}`} />
-            </div>
+      {/* Saldo Total */}
+      <div className="relative overflow-hidden rounded-2xl p-6 bg-slate-900/40 backdrop-blur-md border border-indigo-500/20 transition-all hover:-translate-y-1 duration-300 group">
+        <div className="absolute inset-0 bg-linear-to-br from-indigo-500/5 to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity" />
+        <div className="relative flex justify-between items-start">
+          <div>
+            <p className="text-sm font-medium text-slate-400 mb-1">Saldo Total</p>
+            <h3 className={`text-2xl font-bold tracking-tight ${balance >= 0 ? 'text-white' : 'text-red-400'}`}>
+              {formatBRL(balance)}
+            </h3>
           </div>
-          <p className={`text-2xl font-bold tracking-tight ${card.color}`}>
-            {formatBRL(card.value)}
-          </p>
+          <div className="p-3 rounded-xl bg-indigo-500/10 border border-indigo-500/20">
+            <Wallet className="w-5 h-5 text-indigo-400" />
+          </div>
         </div>
-      ))}
+      </div>
+
+      {/* Receitas */}
+      <div className="relative overflow-hidden rounded-2xl p-6 bg-slate-900/40 backdrop-blur-md border border-emerald-500/20 transition-all hover:-translate-y-1 duration-300 group">
+        <div className="absolute inset-0 bg-linear-to-br from-emerald-500/5 to-teal-500/5 opacity-0 group-hover:opacity-100 transition-opacity" />
+        <div className="relative flex justify-between items-start">
+          <div>
+            <p className="text-sm font-medium text-slate-400 mb-1">Receitas</p>
+            <h3 className="text-2xl font-bold tracking-tight text-emerald-400">
+              {formatBRL(income)}
+            </h3>
+          </div>
+          <div className="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20">
+            <TrendingUp className="w-5 h-5 text-emerald-400" />
+          </div>
+        </div>
+      </div>
+
+      {/* Despesas */}
+      <div className="relative overflow-hidden rounded-2xl p-6 bg-slate-900/40 backdrop-blur-md border border-rose-500/20 transition-all hover:-translate-y-1 duration-300 group">
+        <div className="absolute inset-0 bg-linear-to-br from-rose-500/5 to-pink-500/5 opacity-0 group-hover:opacity-100 transition-opacity" />
+        <div className="relative flex justify-between items-start">
+          <div>
+            <p className="text-sm font-medium text-slate-400 mb-1">Despesas</p>
+            <h3 className="text-2xl font-bold tracking-tight text-rose-400">
+              {formatBRL(expense)}
+            </h3>
+          </div>
+          <div className="p-3 rounded-xl bg-rose-500/10 border border-rose-500/20">
+            <TrendingDown className="w-5 h-5 text-rose-400" />
+          </div>
+        </div>
+      </div>
     </div>
   )
 }

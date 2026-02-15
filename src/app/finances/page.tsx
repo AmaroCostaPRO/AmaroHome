@@ -5,8 +5,11 @@ import { createClient } from '@/lib/supabase/server'
 import { getMonthlySummary } from './actions'
 import { PageTransition } from '@/components/layout/page-transition'
 import { SummaryCards } from '@/components/finances/summary-cards'
-import { TransactionList } from '@/components/finances/transaction-list'
+import { RecentTransactions } from '@/components/finances/recent-transactions'
 import { NewTransactionDialog } from '@/components/finances/new-transaction-dialog'
+import { CashFlowChart } from '@/components/finances/charts/cash-flow-chart'
+import { ExpensesPieChart } from '@/components/finances/charts/expenses-pie-chart'
+import { calculateCategoryExpenses, calculateDailyFlow } from '@/lib/financial-utils'
 
 /* ── Nomes dos meses em pt-BR ─────────────────────────────────── */
 
@@ -34,6 +37,11 @@ export default async function FinancesPage({ searchParams }: FinancesPageProps) 
 
   const { income, expense, balance, transactions } = await getMonthlySummary(year, month)
 
+  // Processamento de dados para os gráficos
+  const daysInMonth = new Date(year, month, 0).getDate()
+  const dailyFlowData = calculateDailyFlow(transactions, daysInMonth)
+  const categoryExpensesData = calculateCategoryExpenses(transactions)
+
   /* ── Meses anterior / próximo ─── */
   const prevMonth = month === 1 ? 12 : month - 1
   const prevYear = month === 1 ? year - 1 : year
@@ -44,58 +52,73 @@ export default async function FinancesPage({ searchParams }: FinancesPageProps) 
 
   return (
     <PageTransition>
-      <div className="space-y-8 max-w-5xl">
+      <div className="space-y-6 max-w-7xl mx-auto pb-10">
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
           <div className="space-y-1">
             <h2 className="text-2xl font-bold text-foreground tracking-tight">
-              Finanças
+              CFO 2.0
             </h2>
             <p className="text-muted">
-              Controle de receitas e despesas
+              Dashboard Financeiro Inteligente
             </p>
           </div>
 
-          {/* Seletor de Mês */}
-          <div className="flex items-center gap-2">
-            <Link
-              href={`/finances?month=${prevMonth}&year=${prevYear}`}
-              className="p-2 rounded-sm text-muted hover:text-foreground hover:bg-white/5 transition-colors duration-(--transition-fast)"
-              title="Mês anterior"
-            >
-              <ChevronLeft className="w-5 h-5" />
-            </Link>
-
-            <span className="text-sm font-semibold text-foreground min-w-[140px] text-center">
-              {monthNames[month - 1]} {year}
-            </span>
-
-            {!isCurrentMonth ? (
+          <div className="flex items-center gap-4">
+            {/* Seletor de Mês */}
+            <div className="flex items-center gap-2 bg-slate-900/50 p-1 rounded-lg border border-slate-700/50">
               <Link
-                href={`/finances?month=${nextMonth}&year=${nextYear}`}
-                className="p-2 rounded-sm text-muted hover:text-foreground hover:bg-white/5 transition-colors duration-(--transition-fast)"
-                title="Próximo mês"
+                href={`/finances?month=${prevMonth}&year=${prevYear}`}
+                className="p-1.5 rounded-md text-slate-400 hover:text-white hover:bg-white/10 transition-colors"
+                title="Mês anterior"
               >
-                <ChevronRight className="w-5 h-5" />
+                <ChevronLeft className="w-4 h-4" />
               </Link>
-            ) : (
-              <div className="p-2 text-muted/30">
-                <ChevronRight className="w-5 h-5" />
-              </div>
-            )}
+
+              <span className="text-sm font-semibold text-slate-200 min-w-[120px] text-center">
+                {monthNames[month - 1]} {year}
+              </span>
+
+              {!isCurrentMonth ? (
+                <Link
+                  href={`/finances?month=${nextMonth}&year=${nextYear}`}
+                  className="p-1.5 rounded-md text-slate-400 hover:text-white hover:bg-white/10 transition-colors"
+                  title="Próximo mês"
+                >
+                  <ChevronRight className="w-4 h-4" />
+                </Link>
+              ) : (
+                <div className="p-1.5 text-slate-700 cursor-not-allowed">
+                  <ChevronRight className="w-4 h-4" />
+                </div>
+              )}
+            </div>
+
+            {/* Botão Nova Transação */}
+            <NewTransactionDialog />
           </div>
         </div>
 
-        {/* Summary Cards */}
+        {/* KPIs Cards */}
         <SummaryCards income={income} expense={expense} balance={balance} />
 
-        {/* Nova Transação */}
-        <div className="flex justify-end">
-          <NewTransactionDialog />
+        {/* Grid Principal */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Gráfico de Fluxo de Caixa (Ocupa 2 colunas no desktop) */}
+          <div className="lg:col-span-2 h-[350px]">
+            <CashFlowChart data={dailyFlowData} />
+          </div>
+
+          {/* Gráfico de Pizza (Ocupa 1 coluna) */}
+          <div className="h-[350px]">
+             <ExpensesPieChart data={categoryExpensesData} />
+          </div>
         </div>
 
-        {/* Transações */}
-        <TransactionList transactions={transactions} />
+        {/* Lista de Transações Recentes (Full width) */}
+        <div className="h-[400px]">
+          <RecentTransactions transactions={transactions} />
+        </div>
       </div>
     </PageTransition>
   )
