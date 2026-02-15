@@ -41,16 +41,17 @@ export function Sidebar() {
       {/* Desktop Sidebar */}
       <motion.aside
         initial={false}
-        animate={{ width: collapsed ? 72 : 260 }}
-        transition={{ duration: 0.25, ease: [0.4, 0, 0.2, 1] }}
+        animate={{ width: collapsed ? 88 : 280 }}
+        transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
         className={cn(
-          'hidden lg:flex flex-col fixed left-0 top-0 bottom-0 z-40',
-          'glass-sidebar'
+          'hidden lg:flex flex-col fixed left-4 top-4 bottom-4 z-40',
+          'rounded-3xl border border-white/5 bg-black/20 backdrop-blur-xl',
+          'shadow-[0_0_40px_-10px_rgba(0,0,0,0.5)]'
         )}
       >
         {/* Logo / Brand */}
-        <div className="flex items-center h-16 px-4 gap-3 shrink-0">
-          <div className="w-9 h-9 rounded-sm bg-accent flex items-center justify-center shrink-0">
+        <div className="flex items-center h-20 px-6 gap-4 shrink-0">
+          <div className="w-10 h-10 rounded-xl bg-linear-to-br from-violet-600 to-indigo-600 flex items-center justify-center shrink-0 shadow-[0_0_20px_rgba(124,58,237,0.4)]">
             <Sparkles className="w-5 h-5 text-white" />
           </div>
           <AnimatePresence>
@@ -59,17 +60,17 @@ export function Sidebar() {
                 initial={{ opacity: 0, x: -8 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -8 }}
-                className="text-sm font-semibold text-foreground whitespace-nowrap"
+                className="text-xl font-bold tracking-tight text-white whitespace-nowrap"
               >
-                Hub Pessoal
+                Amaro<span className="text-transparent bg-clip-text bg-linear-to-r from-violet-400 to-cyan-400">Home</span>
               </motion.span>
             )}
           </AnimatePresence>
         </div>
 
         {/* Navigation */}
-        <ScrollArea className="flex-1 px-3 py-2">
-          <nav className="flex flex-col gap-1">
+        <ScrollArea className="flex-1 px-4 py-2">
+          <nav className="flex flex-col gap-2">
             {navItems.map((item) => {
               const isActive = pathname === item.href
               return (
@@ -77,27 +78,18 @@ export function Sidebar() {
                   key={item.href}
                   href={item.href}
                   className={cn(
-                    'relative flex items-center gap-3 px-3 py-2.5 rounded-sm',
-                    'text-sm font-medium transition-all duration-(--transition-fast)',
-                    'group',
+                    'relative flex items-center gap-4 px-4 py-3.5 rounded-2xl',
+                    'text-sm font-medium transition-all duration-300',
+                    'group overflow-hidden',
                     isActive
-                      ? 'text-foreground bg-white/6'
-                      : 'text-muted hover:text-secondary hover:bg-white/3'
+                      ? 'bg-white/10 text-white shadow-[0_0_20px_rgba(139,92,246,0.3)] border border-white/10'
+                      : 'text-muted-foreground hover:text-white hover:bg-white/5'
                   )}
                 >
-                  {/* Active Indicator */}
-                  {isActive && (
-                    <motion.div
-                      layoutId="sidebar-active"
-                      className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-5 rounded-full bg-accent"
-                      transition={{ type: 'spring', stiffness: 400, damping: 30 }}
-                    />
-                  )}
-
                   <item.icon
                     className={cn(
-                      'w-5 h-5 shrink-0 transition-colors',
-                      isActive ? 'text-accent' : 'text-muted group-hover:text-secondary'
+                      'w-5 h-5 shrink-0 transition-all duration-300 z-10',
+                      isActive ? 'text-cyan-300 drop-shadow-[0_0_8px_rgba(6,182,212,0.6)]' : 'group-hover:text-violet-300'
                     )}
                   />
 
@@ -107,17 +99,15 @@ export function Sidebar() {
                         initial={{ opacity: 0, width: 0 }}
                         animate={{ opacity: 1, width: 'auto' }}
                         exit={{ opacity: 0, width: 0 }}
-                        className="whitespace-nowrap overflow-hidden"
+                        className="whitespace-nowrap overflow-hidden z-10"
                       >
                         {item.label}
                       </motion.span>
                     )}
                   </AnimatePresence>
-
-                  {/* Glow on active */}
-                  {isActive && (
-                    <div className="absolute inset-0 rounded-sm bg-accent/4 pointer-events-none" />
-                  )}
+                  
+                  {/* Subtle Hover Gradient */}
+                   <div className="absolute inset-0 bg-linear-to-r from-violet-500/0 via-violet-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none rounded-2xl" />
                 </Link>
               )
             })}
@@ -125,12 +115,12 @@ export function Sidebar() {
         </ScrollArea>
 
         {/* Collapse Toggle */}
-        <div className="px-3 py-3 border-t border-(--border-subtle)">
+        <div className="px-4 py-4 mt-auto">
           <button
             onClick={() => setCollapsed(!collapsed)}
             className={cn(
-              'flex items-center justify-center w-full py-2 rounded-sm',
-              'text-muted hover:text-secondary hover:bg-white/3',
+              'flex items-center justify-center w-full py-2 rounded-lg',
+              'text-muted hover:text-foreground hover:bg-white/5',
               'transition-all duration-(--transition-fast) cursor-pointer'
             )}
           >

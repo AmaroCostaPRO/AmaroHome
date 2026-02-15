@@ -21,13 +21,14 @@ function Toolbar({ editor }: { editor: Editor | null }) {
   }
 
   return (
-    <div className="flex flex-wrap items-center gap-1 p-2 border-b border-glass-border bg-white/5 sticky top-0 z-10 backdrop-blur-md">
+    <div className="flex flex-wrap items-center gap-1 p-3 border-b border-white/5 bg-white/5 sticky top-0 z-10 backdrop-blur-xl">
       <Toggle
         size="sm"
         type="button"
         pressed={editor!.isActive('bold')}
         onPressedChange={() => editor!.chain().focus().toggleBold().run()}
         aria-label="Bold"
+        className="data-[state=on]:bg-violet-600 data-[state=on]:text-white hover:bg-white/10 hover:text-white text-gray-400"
       >
         <Bold className="w-4 h-4" />
       </Toggle>
@@ -38,6 +39,7 @@ function Toolbar({ editor }: { editor: Editor | null }) {
         pressed={editor!.isActive('italic')}
         onPressedChange={() => editor!.chain().focus().toggleItalic().run()}
         aria-label="Italic"
+        className="data-[state=on]:bg-violet-600 data-[state=on]:text-white hover:bg-white/10 hover:text-white text-gray-400"
       >
         <Italic className="w-4 h-4" />
       </Toggle>
@@ -48,11 +50,12 @@ function Toolbar({ editor }: { editor: Editor | null }) {
         pressed={editor!.isActive('strike')}
         onPressedChange={() => editor!.chain().focus().toggleStrike().run()}
         aria-label="Strikethrough"
+        className="data-[state=on]:bg-violet-600 data-[state=on]:text-white hover:bg-white/10 hover:text-white text-gray-400"
       >
         <Strikethrough className="w-4 h-4" />
       </Toggle>
 
-      <Separator className="h-6 mx-1 w-px" />
+      <Separator className="h-6 mx-2 w-px bg-white/10" />
 
       <Toggle
         size="sm"
@@ -60,6 +63,7 @@ function Toolbar({ editor }: { editor: Editor | null }) {
         pressed={editor!.isActive('heading', { level: 1 })}
         onPressedChange={() => editor!.chain().focus().toggleHeading({ level: 1 }).run()}
         aria-label="H1"
+        className="data-[state=on]:bg-violet-600 data-[state=on]:text-white hover:bg-white/10 hover:text-white text-gray-400"
       >
         <Heading1 className="w-4 h-4" />
       </Toggle>
@@ -70,11 +74,12 @@ function Toolbar({ editor }: { editor: Editor | null }) {
         pressed={editor!.isActive('heading', { level: 2 })}
         onPressedChange={() => editor!.chain().focus().toggleHeading({ level: 2 }).run()}
         aria-label="H2"
+        className="data-[state=on]:bg-violet-600 data-[state=on]:text-white hover:bg-white/10 hover:text-white text-gray-400"
       >
         <Heading2 className="w-4 h-4" />
       </Toggle>
 
-      <Separator className="h-6 mx-1 w-px" />
+      <Separator className="h-6 mx-2 w-px bg-white/10" />
 
       <Toggle
         size="sm"
@@ -82,6 +87,7 @@ function Toolbar({ editor }: { editor: Editor | null }) {
         pressed={editor!.isActive('bulletList')}
         onPressedChange={() => editor!.chain().focus().toggleBulletList().run()}
         aria-label="Bullet List"
+        className="data-[state=on]:bg-violet-600 data-[state=on]:text-white hover:bg-white/10 hover:text-white text-gray-400"
       >
         <List className="w-4 h-4" />
       </Toggle>
@@ -92,18 +98,19 @@ function Toolbar({ editor }: { editor: Editor | null }) {
         pressed={editor!.isActive('orderedList')}
         onPressedChange={() => editor!.chain().focus().toggleOrderedList().run()}
         aria-label="Ordered List"
+        className="data-[state=on]:bg-violet-600 data-[state=on]:text-white hover:bg-white/10 hover:text-white text-gray-400"
       >
         <ListOrdered className="w-4 h-4" />
       </Toggle>
 
-      <Separator className="h-6 mx-1 w-px" />
+      <Separator className="h-6 mx-2 w-px bg-white/10" />
 
       <Button
         variant="ghost"
         size="sm"
         type="button"
         onClick={addImage}
-        className="h-8 w-8 p-0"
+        className="h-8 w-8 p-0 hover:bg-white/10 hover:text-cyan-400 text-gray-400"
         title="Inserir Imagem"
       >
         <ImageIcon className="w-4 h-4" />
@@ -117,7 +124,7 @@ function Toolbar({ editor }: { editor: Editor | null }) {
         type="button"
         onClick={() => editor!.chain().focus().undo().run()}
         disabled={!editor!.can().undo()}
-        className="h-8 w-8 p-0"
+        className="h-8 w-8 p-0 hover:bg-white/10 hover:text-white text-gray-400 disabled:opacity-30"
       >
         <Undo className="w-4 h-4" />
       </Button>
@@ -128,7 +135,7 @@ function Toolbar({ editor }: { editor: Editor | null }) {
         type="button"
         onClick={() => editor!.chain().focus().redo().run()}
         disabled={!editor!.can().redo()}
-        className="h-8 w-8 p-0"
+        className="h-8 w-8 p-0 hover:bg-white/10 hover:text-white text-gray-400 disabled:opacity-30"
       >
         <Redo className="w-4 h-4" />
       </Button>
@@ -176,13 +183,13 @@ export function RichTextEditor({ content, onChange, editable = true }: RichTextE
     },
     editorProps: {
       attributes: {
-        class: 'prose prose-invert max-w-none focus:outline-none min-h-[300px] p-4',
+        class: 'prose prose-invert max-w-none focus:outline-none min-h-[300px] p-6 text-gray-100 placeholder:text-gray-500',
       },
     },
   })
 
   return (
-    <div className="flex flex-col border border-glass-border rounded-md overflow-hidden bg-black/20">
+    <div className="flex flex-col h-full bg-transparent">
       {editable && <Toolbar editor={editor} />}
       <EditorContent editor={editor} className="flex-1 overflow-y-auto" />
     </div>

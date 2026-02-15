@@ -51,84 +51,85 @@ export function MediaCard({ item, onPlay }: MediaCardProps) {
   }
 
   return (
-    <div className="group glass-panel overflow-hidden transition-all duration-300 hover:border-(--glass-border-hover) hover:shadow-(--shadow-md)">
+    <div className="group relative glass-card p-2 hover:bg-white/5">
       {/* Capa */}
-      <div className={`relative overflow-hidden ${isYouTube ? 'aspect-video' : 'aspect-square'}`}>
+      <div className={`relative overflow-hidden rounded-2xl ${isYouTube ? 'aspect-video' : 'aspect-square'}`}>
         {item.cover_url ? (
             <Image
             src={item.cover_url}
             alt={item.title}
             fill
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-            className="object-cover transition-transform duration-500 group-hover:scale-105"
+            className="object-cover transition-transform duration-700 group-hover:scale-110"
           />
         ) : (
-          <div className="absolute inset-0 bg-linear-to-br from-accent/20 via-surface to-elevated flex items-center justify-center">
+          <div className="absolute inset-0 bg-linear-to-br from-violet-900/40 via-surface to-black flex items-center justify-center">
             {isYouTube ? (
-              <YouTubeIcon className="w-12 h-12 text-red-500/40" />
+              <YouTubeIcon className="w-12 h-12 text-white/20 group-hover:text-red-500/80 transition-colors duration-500" />
             ) : (
-              <SpotifyIcon className="w-12 h-12 text-green-500/40" />
+              <SpotifyIcon className="w-12 h-12 text-white/20 group-hover:text-green-500/80 transition-colors duration-500" />
             )}
           </div>
         )}
 
-        {/* Badge de plataforma */}
-        <div className="absolute top-2 left-2 z-10">
-          <div className="flex items-center gap-1 px-2 py-1 rounded-md bg-black/60 backdrop-blur-sm text-xs font-medium">
+        {/* Badge de plataforma (Glass Pill) */}
+        <div className="absolute top-3 left-3 z-10">
+          <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-black/40 backdrop-blur-md border border-white/10 text-xs font-medium shadow-lg">
             {isYouTube ? (
               <>
                 <YouTubeIcon className="w-3.5 h-3.5 text-red-500" />
-                <span className="text-red-400">YouTube</span>
+                <span className="text-white/90">YouTube</span>
               </>
             ) : (
               <>
                 <SpotifyIcon className="w-3.5 h-3.5 text-green-500" />
-                <span className="text-green-400">Spotify</span>
+                <span className="text-white/90">Spotify</span>
               </>
             )}
           </div>
         </div>
 
-        {/* Overlay hover com ações */}
-        <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-3">
+        {/* Overlay hover com ações (Neon Glow) */}
+        <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-center justify-center gap-4 backdrop-blur-sm">
           {/* Play in-app */}
           <button
             type="button"
             onClick={handlePlay}
-            className="p-3.5 rounded-full bg-white/15 hover:bg-white/25 text-foreground transition-colors cursor-pointer"
+            className="p-4 rounded-full bg-white text-black hover:scale-110 transition-all duration-300 shadow-[0_0_20px_rgba(255,255,255,0.4)] cursor-pointer"
             title="Reproduzir"
           >
-            <Play className="w-6 h-6" />
+            <Play className="w-6 h-6 fill-current" />
           </button>
 
-          {/* Abrir externamente */}
-          <button
-            type="button"
-            onClick={handleExternal}
-            className="p-2.5 rounded-full bg-white/10 hover:bg-white/20 text-muted hover:text-foreground transition-colors cursor-pointer"
-            title="Abrir externamente"
-          >
-            <ExternalLink className="w-4 h-4" />
-          </button>
+          {/* Ações secundárias */}
+          <div className="flex gap-2">
+            <button
+              type="button"
+              onClick={handleExternal}
+              className="p-2.5 rounded-full bg-white/10 hover:bg-white/20 text-white border border-white/10 backdrop-blur-md transition-all hover:scale-105 cursor-pointer"
+              title="Abrir externamente"
+            >
+              <ExternalLink className="w-4 h-4" />
+            </button>
 
-          {/* Excluir */}
-          <button
-            type="button"
-            onClick={handleDelete}
-            disabled={isPending}
-            className="p-2.5 rounded-full bg-white/10 hover:bg-red-500/20 text-red-400 transition-colors disabled:opacity-50 cursor-pointer"
-            title="Excluir"
-          >
-            <Trash2 className="w-4 h-4" />
-          </button>
+            <button
+              type="button"
+              onClick={handleDelete}
+              disabled={isPending}
+              className="p-2.5 rounded-full bg-white/10 hover:bg-red-500/20 text-white hover:text-red-400 border border-white/10 backdrop-blur-md transition-all hover:scale-105 disabled:opacity-50 cursor-pointer"
+              title="Excluir"
+            >
+              <Trash2 className="w-4 h-4" />
+            </button>
+          </div>
         </div>
       </div>
 
       {/* Info */}
-      <div className="p-3 space-y-0.5">
-        <h3 className="text-sm font-semibold text-foreground line-clamp-1">{item.title}</h3>
+      <div className="px-1 py-3 space-y-1">
+        <h3 className="text-base font-bold text-white leading-tight line-clamp-1 group-hover:text-violet-300 transition-colors">{item.title}</h3>
         {item.description && (
-          <p className="text-xs text-muted line-clamp-1">{item.description}</p>
+          <p className="text-xs text-gray-400 line-clamp-1 font-medium">{item.description}</p>
         )}
       </div>
     </div>

@@ -18,9 +18,9 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   return (
     <>
       <Sidebar />
-      <div className="lg:pl-[260px] min-h-screen flex flex-col transition-all duration-(--transition-base)">
+      <div className="lg:pl-[260px] h-screen flex flex-col transition-all duration-(--transition-base) overflow-hidden">
         <Header />
-        <main className="flex-1 px-4 py-6 md:px-8 md:py-8 pb-20 lg:pb-8 relative z-10">
+        <main className="flex-1 px-4 py-6 md:px-8 md:py-8 pb-20 lg:pb-8 relative z-10 overflow-y-auto overflow-x-hidden">
           {children}
         </main>
       </div>

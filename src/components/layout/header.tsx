@@ -22,22 +22,33 @@ export function Header() {
   const title = pageTitles[pathname] || 'Hub Pessoal'
 
   return (
-    <header className="glass-header sticky top-0 z-30 flex items-center justify-between h-16 px-6">
+    <header className="sticky top-0 z-30 flex items-center justify-between h-20 px-8 transition-all duration-300">
       {/* Page Title */}
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-4">
         {/* Mobile logo (hidden on desktop since sidebar shows it) */}
-        <div className="lg:hidden w-8 h-8 rounded-sm bg-accent flex items-center justify-center">
-          <Sparkles className="w-4 h-4 text-white" />
+        <div className="lg:hidden w-10 h-10 rounded-xl bg-accent flex items-center justify-center shadow-[0_0_15px_var(--accent-glow)]">
+          <Sparkles className="w-5 h-5 text-white" />
         </div>
-        <h1 className="text-lg font-semibold text-foreground tracking-tight">
-          {title}
-        </h1>
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight text-white drop-shadow-md">
+            {title}
+          </h1>
+          <p className="text-sm text-gray-400 font-medium tracking-wide">Bem-vindo de volta, Amaro</p>
+        </div>
       </div>
 
-      {/* User Avatar Placeholder */}
-      <div className="flex items-center gap-3">
-        <div className="w-9 h-9 rounded-full bg-white/6 border border-glass-border flex items-center justify-center text-xs font-medium text-secondary cursor-pointer hover:border-(--glass-border-hover) transition-colors">
-          U
+      {/* User Avatar & Actions */}
+      <div className="flex items-center gap-4">
+        {/* Hire Me / Action Button Concept */}
+        <div className="hidden md:flex items-center gap-2 px-4 py-2 bg-white/5 rounded-full border border-white/10 backdrop-blur-md">
+           <div className="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_10px_#34d399] animate-pulse" />
+           <span className="text-xs font-semibold text-white/80 uppercase tracking-widest">Online</span>
+        </div>
+
+        <div className="w-10 h-10 rounded-full bg-linear-to-tr from-violet-600 to-cyan-500 p-[2px] shadow-[0_0_20px_rgba(124,58,237,0.4)] cursor-pointer hover:scale-105 transition-transform duration-300">
+           <div className="w-full h-full rounded-full bg-[#0b0c15] flex items-center justify-center border border-white/10">
+              <span className="text-sm font-bold text-white">A</span>
+           </div>
         </div>
       </div>
     </header>

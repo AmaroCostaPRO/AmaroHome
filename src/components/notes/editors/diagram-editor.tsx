@@ -24,25 +24,25 @@ const initialNodes: Node[] = [
     data: { label: 'Ideia Central' },
     position: { x: 250, y: 50 },
     type: 'input',
-    style: { background: '#1e293b', color: '#fff', border: '1px solid #334155' },
+    style: { background: '#1e1b4b', color: '#eef2ff', border: '1px solid #4f46e5' },
   },
   {
     id: '2',
     data: { label: 'Desdobramento A' },
     position: { x: 100, y: 200 },
-    style: { background: '#1e293b', color: '#fff', border: '1px solid #334155' },
+    style: { background: '#1e1b4b', color: '#eef2ff', border: '1px solid #4f46e5' },
   },
   {
     id: '3',
     data: { label: 'Desdobramento B' },
     position: { x: 400, y: 200 },
-    style: { background: '#1e293b', color: '#fff', border: '1px solid #334155' },
+    style: { background: '#1e1b4b', color: '#eef2ff', border: '1px solid #4f46e5' },
   },
 ]
 
 const initialEdges: Edge[] = [
-  { id: 'e1-2', source: '1', target: '2', animated: true, style: { stroke: '#94a3b8' } },
-  { id: 'e1-3', source: '1', target: '3', animated: true, style: { stroke: '#94a3b8' } },
+  { id: 'e1-2', source: '1', target: '2', animated: true, style: { stroke: '#6366f1' } },
+  { id: 'e1-3', source: '1', target: '3', animated: true, style: { stroke: '#6366f1' } },
 ]
 
 /* ── DiagramEditor ────────────────────────────────────────────── */
@@ -92,7 +92,7 @@ export function DiagramEditor({ content, onChange }: DiagramEditorProps) {
   }, [nodes, edges, isInitialized, onChange])
 
   const onConnect = useCallback(
-    (params: Connection) => setEdges((eds) => addEdge({ ...params, animated: true, style: { stroke: '#94a3b8' } }, eds)),
+    (params: Connection) => setEdges((eds) => addEdge({ ...params, animated: true, style: { stroke: '#6366f1' } }, eds)),
     [setEdges]
   )
 
@@ -102,7 +102,7 @@ export function DiagramEditor({ content, onChange }: DiagramEditorProps) {
       id,
       position: { x: Math.random() * 400, y: Math.random() * 400 },
       data: { label: 'Nova Ideia' },
-      style: { background: '#1e293b', color: '#fff', border: '1px solid #334155' },
+      style: { background: '#1e1b4b', color: '#eef2ff', border: '1px solid #4f46e5' },
     }
     setNodes((nds) => nds.concat(newNode))
   }, [setNodes])
@@ -127,7 +127,7 @@ export function DiagramEditor({ content, onChange }: DiagramEditorProps) {
   if (!isInitialized) return null
 
   return (
-    <div className="h-[60vh] w-full border border-glass-border rounded-lg overflow-hidden bg-black/90 relative">
+    <div className="h-[60vh] w-full border border-white/5 rounded-2xl overflow-hidden bg-black/40 backdrop-blur-sm relative shadow-inner">
       <ReactFlow
         nodes={nodes}
         edges={edges}
