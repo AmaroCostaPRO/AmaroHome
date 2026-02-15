@@ -7,6 +7,7 @@ const nextConfig: NextConfig = {
       { protocol: 'https', hostname: 'i.ytimg.com' },
       { protocol: 'https', hostname: 'i.scdn.co' }, // Spotify
       { protocol: 'https', hostname: 'th.bing.com' }, // Bing Images (IA/Games)
+      { protocol: 'https', hostname: 'media.rawg.io' }, // RAWG API
     ],
   },
 };

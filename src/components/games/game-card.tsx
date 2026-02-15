@@ -6,6 +6,7 @@ import { MoreHorizontal, Gamepad2, ListChecks, Trophy, Trash2 } from 'lucide-rea
 import { DropdownMenu } from 'radix-ui'
 import { updateGameStatus, deleteGame } from '@/app/games/actions'
 import type { Game } from '@/app/games/actions'
+import { GameDetailsModal } from './game-details-modal'
 
 /* ── Status Config ────────────────────────────────────────────── */
 
@@ -35,59 +36,43 @@ export function GameCard({ game }: GameCardProps) {
   }
 
   return (
-    <div className="group relative glass-card overflow-hidden" style={{ aspectRatio: '3/4' }}>
-      {/* Imagem de capa ou Fallback gradiente */}
+    <div className="group relative glass-card overflow-hidden aspect-3/4 border-0">
+      {/* Imagem de capa ou Fallback */}
       {game.cover_url ? (
         <Image
           src={game.cover_url}
           alt={game.title}
           fill
           sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 20vw"
-          className="object-cover"
+          className="object-cover transition-transform duration-700 group-hover:scale-110"
         />
       ) : (
-        <div className="absolute inset-0 bg-linear-to-br from-accent/20 via-surface to-elevated flex items-center justify-center p-4">
-          <span className="text-sm font-semibold text-center text-secondary leading-tight">
-            {game.title}
-          </span>
+        <div className="absolute inset-0 bg-linear-to-br from-indigo-900/50 via-purple-900/50 to-background flex items-center justify-center p-4">
+          <Gamepad2 className="w-12 h-12 text-white/10" />
         </div>
       )}
 
-      {/* Overlay escuro no hover */}
-      <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+      {/* Overlay gradiente para legibilidade do texto */}
+      <div className="absolute inset-0 bg-linear-to-t from-black/90 via-black/20 to-transparent opacity-60 group-hover:opacity-80 transition-opacity duration-300 pointer-events-none" />
 
-      {/* Badge de status */}
-      <div className="absolute bottom-2 left-2 z-10">
-        <span className={`inline-flex items-center text-[10px] font-medium px-2 py-0.5 rounded-full ${config.color} text-white backdrop-blur-sm`}>
+      {/* Trigger para Modal de Detalhes (Imagem/Card inteiro clicável, exceto controles) */}
+      <GameDetailsModal game={game}>
+        <div className="absolute inset-0 z-0 cursor-pointer" />
+      </GameDetailsModal>
+
+      {/* Badge de status (Top Left) */}
+      <div className="absolute top-2 left-2 z-10">
+        <span className={`inline-flex items-center text-[10px] uppercase tracking-wider font-bold px-2 py-0.5 rounded-sm ${config.color} text-white shadow-lg`}>
           {config.label}
         </span>
       </div>
 
-      {/* Título no hover (quando tem capa) */}
-      {game.cover_url && (
-        <div className="absolute bottom-8 left-2 right-8 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-          <p className="text-xs font-semibold text-white drop-shadow-lg leading-tight line-clamp-2">
-            {game.title}
-          </p>
-          {game.platform && (
-            <p className="text-[10px] text-white/60 mt-0.5">{game.platform}</p>
-          )}
-        </div>
-      )}
-
-      {/* Overlay de loading */}
-      {isPending && (
-        <div className="absolute inset-0 z-20 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-          <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-        </div>
-      )}
-
-      {/* Dropdown Menu (3 pontos) */}
+      {/* Dropdown Menu (Top Right) */}
       <div className="absolute top-2 right-2 z-20 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
         <DropdownMenu.Root>
           <DropdownMenu.Trigger asChild>
             <button
-              className="p-1.5 rounded-md bg-black/50 backdrop-blur-sm text-white/80 hover:text-white hover:bg-black/70 transition-colors cursor-pointer"
+              className="p-1.5 rounded-full bg-black/40 backdrop-blur-md text-white hover:bg-black/60 transition-colors cursor-pointer border border-white/10"
               aria-label="Opções do jogo"
             >
               <MoreHorizontal className="w-4 h-4" />
@@ -141,6 +126,23 @@ export function GameCard({ game }: GameCardProps) {
           </DropdownMenu.Portal>
         </DropdownMenu.Root>
       </div>
+
+      {/* Footer Info (Glassmorphism) */}
+      <div className="absolute bottom-0 inset-x-0 p-3 bg-slate-900/60 backdrop-blur-md border-t border-white/10 transition-transform duration-300 translate-y-0">
+        <h3 className="text-sm font-bold text-white leading-tight line-clamp-2 drop-shadow-md">
+          {game.title}
+        </h3>
+        {game.platform && (
+          <p className="text-[10px] text-white/70 mt-1 font-medium">{game.platform}</p>
+        )}
+      </div>
+
+      {/* Overlay de loading */}
+      {isPending && (
+        <div className="absolute inset-0 z-30 flex items-center justify-center bg-black/60 backdrop-blur-sm">
+          <div className="w-6 h-6 border-2 border-white/20 border-t-white rounded-full animate-spin" />
+        </div>
+      )}
     </div>
   )
 }
