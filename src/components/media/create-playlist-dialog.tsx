@@ -19,7 +19,7 @@ function SubmitButton() {
   const { pending } = useFormStatus()
 
   return (
-    <Button type="submit" disabled={pending} className="w-full bg-linear-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white border-0">
+    <Button type="submit" disabled={pending} className="w-full h-11 bg-linear-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white border-0">
       {pending ? (
         <>
           <Loader2 className="w-4 h-4 animate-spin mr-2" />
@@ -58,7 +58,7 @@ export function CreatePlaylistDialog() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="w-full justify-start pl-3 bg-linear-to-r from-indigo-500/10 to-purple-500/10 hover:from-indigo-500/20 hover:to-purple-500/20 text-indigo-300 border border-indigo-500/20 hover:border-indigo-500/40 transition-all duration-300 group">
+        <Button className="w-full h-11 justify-start pl-3 bg-linear-to-r from-indigo-500/10 to-purple-500/10 hover:from-indigo-500/20 hover:to-purple-500/20 text-indigo-300 border border-indigo-500/20 hover:border-indigo-500/40 transition-all duration-300 group">
           <div className="bg-indigo-500/20 p-1.5 rounded-md mr-3 group-hover:bg-indigo-500/30 transition-colors">
             <FolderPlus className="w-4 h-4 text-indigo-400 group-hover:text-indigo-300" />
           </div>
@@ -73,19 +73,19 @@ export function CreatePlaylistDialog() {
           </DialogDescription>
         </DialogHeader>
         
-        <form ref={formRef} action={handleSubmit} className="space-y-4 pt-4">
-          <div className="space-y-2">
+        <form ref={formRef} action={handleSubmit} className="space-y-6 pt-4">
+          <div className="space-y-3">
             <label htmlFor="title" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Nome</label>
             <Input
               id="title"
               name="title"
               placeholder="Ex: Músicas para Programar, Vídeos de React..."
               required
-              className="bg-black/20 border-white/10 focus:border-indigo-500/50"
+              className="bg-black/20 border-white/10 focus:border-indigo-500/50 h-11"
             />
           </div>
           
-          <div className="space-y-2">
+          <div className="space-y-3">
             <label htmlFor="color" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Cor (Opcional)</label>
             <div className="flex gap-2">
                {/* Simple color selection for now - could be improved with a proper picker */}
@@ -100,7 +100,7 @@ export function CreatePlaylistDialog() {
                    />
                    <label 
                     htmlFor={`color-${c}`}
-                    className="block w-6 h-6 rounded-full cursor-pointer hover:scale-110 transition-transform peer-checked:ring-2 peer-checked:ring-white peer-checked:ring-offset-1 peer-checked:ring-offset-black"
+                    className="block w-8 h-8 rounded-full cursor-pointer hover:scale-110 transition-transform peer-checked:ring-2 peer-checked:ring-white peer-checked:ring-offset-1 peer-checked:ring-offset-black"
                     style={{ backgroundColor: c }}
                    />
                  </div>

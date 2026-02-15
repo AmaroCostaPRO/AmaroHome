@@ -51,16 +51,16 @@ export function MediaCard({ item, onPlay }: MediaCardProps) {
   }
 
   return (
-    <div className="group relative glass-card p-2 hover:bg-white/5">
+    <div className="group relative glass-card p-0 overflow-hidden hover:bg-white/5 flex flex-col h-full">
       {/* Capa */}
-      <div className={`relative overflow-hidden rounded-2xl ${isYouTube ? 'aspect-video' : 'aspect-square'}`}>
+      <div className={`relative w-full ${isYouTube ? 'aspect-video' : 'aspect-square'}`}>
         {item.cover_url ? (
             <Image
             src={item.cover_url}
             alt={item.title}
             fill
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-            className="object-cover transition-transform duration-700 group-hover:scale-110"
+            className="object-cover transition-transform duration-700 group-hover:scale-105"
           />
         ) : (
           <div className="absolute inset-0 bg-linear-to-br from-violet-900/40 via-surface to-black flex items-center justify-center">
@@ -90,7 +90,7 @@ export function MediaCard({ item, onPlay }: MediaCardProps) {
         </div>
 
         {/* Overlay hover com ações (Neon Glow) */}
-        <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-center justify-center gap-4 backdrop-blur-sm">
+        <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-center justify-center gap-4 backdrop-blur-sm z-20">
           {/* Play in-app */}
           <button
             type="button"
@@ -126,10 +126,10 @@ export function MediaCard({ item, onPlay }: MediaCardProps) {
       </div>
 
       {/* Info */}
-      <div className="px-1 py-3 space-y-1">
-        <h3 className="text-base font-bold text-white leading-tight line-clamp-1 group-hover:text-violet-300 transition-colors">{item.title}</h3>
+      <div className="p-4 flex flex-col gap-2 grow">
+        <h3 className="text-base font-bold text-white leading-tight line-clamp-2 group-hover:text-violet-300 transition-colors">{item.title}</h3>
         {item.description && (
-          <p className="text-xs text-gray-400 line-clamp-1 font-medium">{item.description}</p>
+          <p className="text-xs text-secondary line-clamp-1">{item.description}</p>
         )}
       </div>
     </div>
