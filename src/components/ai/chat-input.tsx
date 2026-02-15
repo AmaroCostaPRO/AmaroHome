@@ -61,7 +61,7 @@ export function ChatInput({ onSend, isStreaming, onStop }: ChatInputProps) {
       {isStreaming ? (
         <Button
           type="button"
-          variant="danger"
+          variant="destructive"
           onClick={onStop}
           className="shrink-0"
         >
