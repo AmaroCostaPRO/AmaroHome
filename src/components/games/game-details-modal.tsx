@@ -74,19 +74,37 @@ export function GameDetailsModal({ game, children }: GameDetailsModalProps) {
     })
   }
 
+  const isMissingData = !game.rawg_id
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <div onClick={() => setOpen(true)} className="cursor-pointer">
         {children}
       </div>
       
-      <DialogContent className="max-w-4xl p-0 gap-0 overflow-hidden bg-slate-950/95 border-white/10 backdrop-blur-xl shadow-2xl">
+      <DialogContent className="max-w-4xl p-0 gap-0 overflow-hidden bg-slate-950/95 border-white/10 backdrop-blur-xl shadow-2xl min-h-[500px] flex flex-col">
+        {isMissingData && (
+          <div className="absolute inset-0 z-50 flex flex-col items-center justify-center bg-background/90 backdrop-blur-sm p-6 text-center">
+             <Info className="w-12 h-12 text-yellow-500 mb-4" />
+             <h3 className="text-xl font-bold mb-2">Dados não disponíveis</h3>
+             <p className="text-muted-foreground max-w-md  mb-6">
+               Este jogo foi adicionado antes da integração com a RAWG ou sem um ID válido. 
+               Por favor, remova e adicione o jogo novamente para ver os detalhes completos.
+             </p>
+             <button 
+               className="px-4 py-2 rounded-md bg-white/10 hover:bg-white/20 transition-colors text-sm font-medium"
+               onClick={() => setOpen(false)}
+             >
+               Fechar
+             </button>
+          </div>
+        )}
+        
         <DialogHeader className="sr-only">
             <DialogTitle>{game.title}</DialogTitle>
             <DialogDescription>Detalhes do jogo</DialogDescription>
         </DialogHeader>
 
-        {/* Hero Section */}
         <div className="relative h-64 w-full">
           {(details?.background_image || game.cover_url) ? (
             <Image
@@ -99,26 +117,27 @@ export function GameDetailsModal({ game, children }: GameDetailsModalProps) {
           ) : (
              <div className="w-full h-full bg-slate-900" />
           )}
-          <div className="absolute inset-0 bg-linear-to-b from-transparent via-slate-950/60 to-slate-950" />
+          {/* Stronger Overlay Gradient */}
+          <div className="absolute inset-0 bg-linear-to-t from-slate-950 via-slate-950/80 to-transparent" />
           
           <div className="absolute bottom-6 left-6 right-6">
-            <h2 className="text-4xl font-bold text-white drop-shadow-md mb-2">{game.title}</h2>
+            <h2 className="text-4xl font-bold text-white drop-shadow-lg mb-3 tracking-tight">{game.title}</h2>
             
-            <div className="flex flex-wrap gap-3 items-center text-sm text-white/80">
+            <div className="flex flex-wrap gap-3 items-center text-sm text-white/90">
               {details?.developers?.[0] && (
-                <div className="flex items-center gap-1.5 bg-white/10 px-2 py-1 rounded-md backdrop-blur-sm">
-                  <Building className="w-4 h-4 text-accent" />
-                  <span>{details.developers[0].name}</span>
+                <div className="flex items-center gap-1.5 bg-slate-950/40 border border-white/10 px-2.5 py-1 rounded-md backdrop-blur-md shadow-sm">
+                  <Building className="w-4 h-4 text-violet-400" />
+                  <span className="font-medium">{details.developers[0].name}</span>
                 </div>
               )}
               
-              <div className="flex items-center gap-1.5 bg-white/10 px-2 py-1 rounded-md backdrop-blur-sm">
-                <Calendar className="w-4 h-4 text-accent" />
-                <span>{formatDate(details?.released || game.metadata?.release_date as string)}</span>
+              <div className="flex items-center gap-1.5 bg-slate-950/40 border border-white/10 px-2.5 py-1 rounded-md backdrop-blur-md shadow-sm">
+                <Calendar className="w-4 h-4 text-violet-400" />
+                <span className="font-medium">{formatDate(details?.released || game.metadata?.release_date as string)}</span>
               </div>
 
               {details?.genres?.slice(0, 3).map(g => (
-                <span key={g.name} className="px-2 py-1 rounded-md bg-accent/20 text-accent font-medium text-xs border border-accent/20">
+                <span key={g.name} className="px-3 py-0.5 rounded-full bg-slate-950/60 backdrop-blur-md border border-indigo-500/30 text-indigo-200 font-medium text-xs shadow-lg">
                   {g.name}
                 </span>
               ))}
@@ -133,7 +152,7 @@ export function GameDetailsModal({ game, children }: GameDetailsModalProps) {
           <div className="space-y-6">
             <div className="prose prose-invert max-w-none">
               <h3 className="text-lg font-semibold text-white/90 flex items-center gap-2 mb-3">
-                <Info className="w-5 h-5 text-accent" />
+                <Info className="w-5 h-5 text-violet-400" />
                 Sobre
               </h3>
               {!details ? (
@@ -186,25 +205,25 @@ export function GameDetailsModal({ game, children }: GameDetailsModalProps) {
                 <ToggleGroupItem 
                   value="like" 
                   aria-label="Gostei"
-                  className="w-full data-[state=on]:bg-emerald-500/20 data-[state=on]:text-emerald-400 hover:bg-white/5 hover:text-emerald-400 transition-all"
+                  className="w-full hover:bg-white/5 transition-all data-[state=on]:bg-emerald-500/10 data-[state=on]:text-emerald-400 data-[state=on]:drop-shadow-[0_0_8px_rgba(52,211,153,0.5)] group"
                 >
-                  <ThumbsUp className="w-5 h-5" />
+                  <ThumbsUp className="w-5 h-5 group-hover:text-emerald-400/80 transition-colors" />
                 </ToggleGroupItem>
                 
                 <ToggleGroupItem 
                   value="neutral" 
                   aria-label="Neutro"
-                  className="w-full data-[state=on]:bg-white/10 data-[state=on]:text-white hover:bg-white/5 transition-all"
+                  className="w-full hover:bg-white/5 transition-all data-[state=on]:bg-white/10 data-[state=on]:text-white group"
                 >
-                  <Minus className="w-5 h-5" />
+                  <Minus className="w-5 h-5 group-hover:text-white/80 transition-colors" />
                 </ToggleGroupItem>
                 
                 <ToggleGroupItem 
                   value="dislike" 
                   aria-label="Não gostei"
-                  className="w-full data-[state=on]:bg-red-500/20 data-[state=on]:text-red-400 hover:bg-white/5 hover:text-red-400 transition-all"
+                  className="w-full hover:bg-white/5 transition-all data-[state=on]:bg-red-500/10 data-[state=on]:text-red-400 data-[state=on]:drop-shadow-[0_0_8px_rgba(248,113,113,0.5)] group"
                 >
-                  <ThumbsDown className="w-5 h-5" />
+                  <ThumbsDown className="w-5 h-5 group-hover:text-red-400/80 transition-colors" />
                 </ToggleGroupItem>
               </ToggleGroup>
             </div>

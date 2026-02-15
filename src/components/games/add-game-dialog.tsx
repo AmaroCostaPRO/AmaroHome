@@ -199,6 +199,7 @@ export function AddGameDialog() {
           ) : (
             <form action={handleAction} className="flex flex-col gap-4">
               <input type="hidden" name="cover_url" value={selectedGame?.cover_url || ''} />
+              <input type="hidden" name="rawg_id" value={selectedGame?.id || ''} />
               
               <div className="flex gap-4 items-start">
                 <div className="relative w-24 aspect-3/4 rounded-md overflow-hidden shrink-0 border border-white/10 shadow-lg">

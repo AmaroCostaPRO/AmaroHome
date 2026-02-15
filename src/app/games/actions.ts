@@ -61,29 +61,35 @@ export async function addGame(formData: FormData) {
 
   if (!title) throw new Error('O título é obrigatório')
 
-  // Tentar encontrar RAWG ID se possível
-  let rawg_id: number | null = null
+  // Check if rawg_id was passed directly
+  let rawg_id = formData.get('rawg_id') ? parseInt(formData.get('rawg_id') as string) : null
   let genre: string | null = null
   let released: string | null = null
-  
-  // Se tivermos um cover_url da RAWG, podemos tentar extrair o ID ou fazer uma busca exata
-  // Mas por simplicidade, vamos fazer uma busca exata pelo nome na RAWG para pegar metadados
-  if (process.env.RAWG_API_KEY) {
+
+  // If we don't have an ID but have an API key, try to find it (fallback/legacy support)
+  if (!rawg_id && process.env.RAWG_API_KEY) {
     try {
       const search = await searchRAWGGames(title)
       const match = search.find(g => g.title.toLowerCase() === title.toLowerCase()) || search[0]
       if (match) {
         rawg_id = match.id
-        // Buscar detalhes para pegar gênero
-        const details = await getRAWGGameDetails(match.id)
-        if (details) {
-          genre = details.genres[0]?.name || null
-          released = details.released
-        }
       }
     } catch (e) {
       console.error('Error fetching auto-metadata:', e)
     }
+  }
+
+  // Fetch details to get genre/release date if we have an ID now
+  if (rawg_id && process.env.RAWG_API_KEY) {
+     try {
+        const details = await getRAWGGameDetails(rawg_id)
+        if (details) {
+          genre = details.genres[0]?.name || null
+          released = details.released
+        }
+     } catch (e) {
+        console.error('Error fetching details for metadata:', e)
+     }
   }
 
   const { error } = await supabase.from('games_library').insert({
