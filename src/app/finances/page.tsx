@@ -10,6 +10,7 @@ import { NewTransactionDialog } from '@/components/finances/new-transaction-dial
 import { CashFlowChart } from '@/components/finances/charts/cash-flow-chart'
 import { ExpensesPieChart } from '@/components/finances/charts/expenses-pie-chart'
 import { calculateCategoryExpenses, calculateDailyFlow } from '@/lib/financial-utils'
+import { PageWrapper } from '@/components/layout/page-wrapper'
 
 /* ── Nomes dos meses em pt-BR ─────────────────────────────────── */
 
@@ -52,7 +53,7 @@ export default async function FinancesPage({ searchParams }: FinancesPageProps) 
 
   return (
     <PageTransition>
-      <div className="space-y-6 max-w-7xl mx-auto pb-10">
+      <PageWrapper className="space-y-6 pb-10">
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
           <div className="space-y-1">
@@ -119,7 +120,7 @@ export default async function FinancesPage({ searchParams }: FinancesPageProps) 
         <div className="h-[400px]">
           <RecentTransactions transactions={transactions} />
         </div>
-      </div>
+      </PageWrapper>
     </PageTransition>
   )
 }

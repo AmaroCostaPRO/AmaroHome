@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { getSmartDashboardData } from '@/services/smart-dashboard'
 import { PageTransition } from '@/components/layout/page-transition'
+import { PageWrapper } from '@/components/layout/page-wrapper'
 import { BentoGrid, BentoCard } from '@/components/dashboard/bento-grid'
 import { WelcomeWidget } from '@/components/dashboard/welcome-widget'
 import { CFOWidget } from '@/components/dashboard/cfo-widget'
@@ -22,7 +23,7 @@ export default async function DashboardPage() {
 
   return (
     <PageTransition>
-      <div className="max-w-7xl mx-auto space-y-6">
+      <PageWrapper className="space-y-6">
         
         <BentoGrid>
           
@@ -65,7 +66,7 @@ export default async function DashboardPage() {
 
         </BentoGrid>
 
-      </div>
+      </PageWrapper>
     </PageTransition>
   )
 }

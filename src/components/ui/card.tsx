@@ -20,7 +20,7 @@ const CardHeader = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
   ({ className, ...props }, ref) => (
     <div
       ref={ref}
-      className={cn('flex flex-col gap-1.5 px-6 pt-6 pb-2', className)}
+      className={cn('flex flex-col gap-2 p-6', className)}
       {...props}
     />
   )
@@ -34,7 +34,7 @@ const CardTitle = forwardRef<HTMLHeadingElement, HTMLAttributes<HTMLHeadingEleme
     <h3
       ref={ref}
       className={cn(
-        'text-base font-semibold text-foreground tracking-tight',
+        'text-xl font-semibold text-foreground tracking-tight',
         className
       )}
       {...props}
@@ -49,7 +49,7 @@ const CardDescription = forwardRef<HTMLParagraphElement, HTMLAttributes<HTMLPara
   ({ className, ...props }, ref) => (
     <p
       ref={ref}
-      className={cn('text-sm text-muted', className)}
+      className={cn('text-base text-muted', className)}
       {...props}
     />
   )
@@ -62,7 +62,7 @@ const CardContent = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
   ({ className, ...props }, ref) => (
     <div
       ref={ref}
-      className={cn('px-6 pb-6 pt-2', className)}
+      className={cn('p-6 pt-0', className)}
       {...props}
     />
   )
@@ -76,7 +76,7 @@ const CardFooter = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
     <div
       ref={ref}
       className={cn(
-        'flex items-center px-6 pb-6 border-t border-(--border-subtle) mt-2 pt-4',
+        'flex items-center p-6 pt-0 border-t border-(--border-subtle) mt-2',
         className
       )}
       {...props}

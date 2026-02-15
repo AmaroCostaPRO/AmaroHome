@@ -4,6 +4,7 @@ import { getGames } from './actions'
 import { PageTransition } from '@/components/layout/page-transition'
 import { GamesTabContent } from '@/components/games/games-tab-content'
 import { AddGameDialog } from '@/components/games/add-game-dialog'
+import { PageWrapper } from '@/components/layout/page-wrapper'
 
 /* ── Página ───────────────────────────────────────────────────── */
 
@@ -17,7 +18,7 @@ export default async function GamesPage() {
 
   return (
     <PageTransition>
-      <div className="space-y-8 max-w-6xl">
+      <PageWrapper className="space-y-8">
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
           <div className="space-y-1">
@@ -34,7 +35,7 @@ export default async function GamesPage() {
 
         {/* Tabs de Jogos */}
         <GamesTabContent games={games} />
-      </div>
+      </PageWrapper>
     </PageTransition>
   )
 }

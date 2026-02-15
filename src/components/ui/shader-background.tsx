@@ -148,7 +148,15 @@ const fragmentShader = `
     vec2 uv = vUv * 2.0 - 1.0;
     // Shift Y to utilize independent negative domain (more colorful) for the entire height
     uv.y = -uv.y - 1.0; 
-    gl_FragColor = cppn_fn(uv, 0.1 * sin(0.3 * iTime), 0.1 * sin(0.69 * iTime), 0.1 * sin(0.44 * iTime));
+    
+    vec4 color = cppn_fn(uv, 0.1 * sin(0.3 * iTime), 0.1 * sin(0.69 * iTime), 0.1 * sin(0.44 * iTime));
+    
+    // Inject Deep Navy Base (replaces pure black)
+    // Matches the requested visual style (Deep Blue/Purple void instead of Black)
+    vec3 baseColor = vec3(0.02, 0.02, 0.15); 
+    
+    // Screen blend or Max to ensure the base color is visible in dark areas
+    gl_FragColor = vec4(max(color.rgb, baseColor), 1.0);
   }
 `;
 
@@ -218,7 +226,7 @@ export function ShaderBackground() {
   return (
     <div 
       ref={canvasRef} 
-      className="fixed inset-0 -z-30 w-full h-full pointer-events-none bg-black"
+      className="fixed inset-0 -z-30 w-full h-full pointer-events-none bg-[#020210]"
       aria-hidden="true"
     >
       <Canvas

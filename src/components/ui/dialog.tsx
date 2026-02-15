@@ -88,7 +88,7 @@ const DialogTitle = forwardRef<
 >(({ className, ...props }, ref) => (
   <RadixDialog.Title
     ref={ref}
-    className={cn('text-lg font-semibold text-foreground tracking-tight', className)}
+    className={cn('text-2xl font-semibold text-foreground tracking-tight', className)}
     {...props}
   />
 ))
@@ -102,7 +102,7 @@ const DialogDescription = forwardRef<
 >(({ className, ...props }, ref) => (
   <RadixDialog.Description
     ref={ref}
-    className={cn('text-sm text-muted', className)}
+    className={cn('text-base text-muted', className)}
     {...props}
   />
 ))

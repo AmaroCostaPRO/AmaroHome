@@ -16,14 +16,14 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <>
+    <div className="flex h-screen w-full overflow-hidden">
       <Sidebar />
-      <div className="lg:pl-[260px] h-screen flex flex-col transition-all duration-(--transition-base) overflow-hidden">
+      <div className="flex-1 flex flex-col h-full overflow-hidden relative transition-all duration-300">
         <Header />
-        <main className="flex-1 px-4 py-6 md:px-8 md:py-8 pb-20 lg:pb-8 relative z-10 overflow-y-auto overflow-x-hidden">
+        <main className="flex-1 overflow-y-auto overflow-x-hidden relative z-10 scroll-smooth">
           {children}
         </main>
       </div>
-    </>
+    </div>
   )
 }

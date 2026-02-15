@@ -7,6 +7,7 @@ import { AddMediaDialog } from '@/components/media/add-media-dialog'
 import { PlaylistSidebar } from '@/components/media/playlist-sidebar'
 import { DialogTrigger } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
+import { PageWrapper } from '@/components/layout/page-wrapper'
 import { Plus } from 'lucide-react'
 
 /* ── Página ───────────────────────────────────────────────────── */
@@ -32,7 +33,7 @@ export default async function MediaPage({ searchParams }: MediaPageProps) {
 
   return (
     <PageTransition>
-      <div className="space-y-8 max-w-7xl mx-auto">
+      <PageWrapper className="space-y-8">
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
           <div className="space-y-1">
@@ -64,7 +65,7 @@ export default async function MediaPage({ searchParams }: MediaPageProps) {
              <MediaClient media={media} playlists={playlists} />
           </div>
         </div>
-      </div>
+      </PageWrapper>
     </PageTransition>
   )
 }
