@@ -1,24 +1,32 @@
-export default function EbooksLoading() {
+import { PageWrapper } from "@/components/layout/page-wrapper"
+import { Skeleton } from "@/components/ui/skeleton"
+
+export default function Loading() {
   return (
-    <div className="space-y-8 max-w-7xl animate-pulse">
-      {/* Header Skeleton */}
+    <PageWrapper className="space-y-8">
+      {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
         <div className="space-y-2">
-          <div className="h-8 w-48 bg-white/5 rounded-md" />
-          <div className="h-4 w-40 bg-white/5 rounded-md" />
+          <Skeleton className="h-8 w-48 bg-slate-800/50" />
+          <Skeleton className="h-4 w-64 bg-slate-800/50" />
         </div>
-        <div className="h-10 w-10 bg-white/5 rounded-md" />
       </div>
 
       {/* Upload Zone Skeleton */}
-      <div className="h-32 w-full bg-white/5 rounded-xl border border-dashed border-white/10" />
+      <Skeleton className="w-full h-32 rounded-3xl bg-slate-800/50" />
 
-      {/* Books Grid Skeleton */}
+      {/* Books Grid */}
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-5">
-        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((i) => (
-          <div key={i} className="aspect-2/3 rounded-lg bg-white/5" />
+        {[...Array(12)].map((_, i) => (
+          <div key={i} className="space-y-3">
+            <div key={i} className="aspect-2/3 rounded-xl bg-slate-800/50" />
+            <div className="space-y-2">
+              <Skeleton className="h-4 w-3/4 bg-slate-800/50" />
+              <Skeleton className="h-3 w-1/2 bg-slate-800/50" />
+            </div>
+          </div>
         ))}
       </div>
-    </div>
+    </PageWrapper>
   )
 }

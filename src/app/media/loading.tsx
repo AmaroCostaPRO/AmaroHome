@@ -1,28 +1,30 @@
-export default function MediaLoading() {
+import { PageWrapper } from "@/components/layout/page-wrapper"
+import { Skeleton } from "@/components/ui/skeleton"
+
+export default function Loading() {
   return (
-    <div className="space-y-8 max-w-6xl animate-pulse">
-      {/* Header Skeleton */}
-      <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
+    <PageWrapper className="space-y-8">
+      {/* Header */}
+      <div className="flex items-center justify-between">
         <div className="space-y-2">
-          <div className="h-8 w-48 bg-white/5 rounded-md" />
-          <div className="h-4 w-64 bg-white/5 rounded-md" />
+          <Skeleton className="h-8 w-48 bg-slate-800/50" />
+          <Skeleton className="h-4 w-96 bg-slate-800/50" />
         </div>
-        <div className="h-10 w-40 bg-white/5 rounded-md" />
+        <Skeleton className="h-10 w-32 rounded-full bg-slate-800/50" />
       </div>
 
-      {/* Media Grid Skeleton */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6">
-        {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
-          <div key={i} className="rounded-xl overflow-hidden glass-panel border border-white/5">
-            {/* Aspect Ratio Box */}
-            <div className="aspect-square bg-white/5 w-full" />
-            <div className="p-3 space-y-2">
-              <div className="h-4 w-3/4 bg-white/5 rounded-md" />
-              <div className="h-3 w-1/2 bg-white/5 rounded-md" />
+      {/* Media Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        {[...Array(8)].map((_, i) => (
+          <div key={i} className="space-y-3">
+            <Skeleton className="aspect-video w-full rounded-2xl bg-slate-800/50" />
+            <div className="space-y-2">
+              <Skeleton className="h-4 w-3/4 bg-slate-800/50" />
+              <Skeleton className="h-3 w-1/2 bg-slate-800/50" />
             </div>
           </div>
         ))}
       </div>
-    </div>
+    </PageWrapper>
   )
 }

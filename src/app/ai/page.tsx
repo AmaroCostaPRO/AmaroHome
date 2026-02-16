@@ -5,6 +5,7 @@ import { Sparkles, BookOpen, Lightbulb, MessageSquare } from 'lucide-react'
 import { ChatMessage } from '@/components/ai/chat-message'
 import { ChatInput } from '@/components/ai/chat-input'
 import { Button } from '@/components/ui/button'
+import { PageWrapper } from '@/components/layout/page-wrapper'
 
 /* ── Tipos ────────────────────────────────────────────────────── */
 
@@ -128,7 +129,7 @@ export default function AIPage() {
   const hasMessages = messages.length > 0
 
   return (
-    <div className="flex flex-col h-[calc(100vh-6rem)] max-w-4xl">
+    <PageWrapper className="flex flex-col h-[calc(100vh-6rem)] max-w-4xl mx-auto">
       {/* Header */}
       <div className="shrink-0 mb-4">
         <h2 className="text-2xl font-bold text-foreground tracking-tight">
@@ -200,6 +201,6 @@ export default function AIPage() {
           onStop={handleStop}
         />
       </div>
-    </div>
+    </PageWrapper>
   )
 }

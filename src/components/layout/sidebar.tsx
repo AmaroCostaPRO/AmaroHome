@@ -41,16 +41,18 @@ export function Sidebar() {
       {/* Desktop Sidebar */}
       <motion.aside
         initial={false}
-        animate={{ width: collapsed ? 96 : 320 }}
+        animate={{ width: collapsed ? 88 : 250 }}
         transition={{ duration: 0.3, ease: [0.2, 0, 0, 1] }}
         className={cn(
-          'hidden lg:flex flex-col relative z-40 h-full',
-          'border-r border-white/5 bg-black/20 backdrop-blur-xl',
+          'hidden lg:flex flex-col relative z-40',
+          'h-[calc(100vh-2rem)] my-4 ml-4',
+          'rounded-3xl border border-white/5 bg-black/20 backdrop-blur-xl',
+          'shadow-[0_0_40px_-10px_rgba(0,0,0,0.5)]',
           'shrink-0'
         )}
       >
         {/* Logo / Brand */}
-        <div className="flex items-center h-24 px-8 gap-5 shrink-0">
+        <div className="flex items-center h-24 px-5 gap-4 shrink-0 overflow-hidden">
           <div className="w-12 h-12 rounded-2xl bg-linear-to-br from-violet-600 to-indigo-600 flex items-center justify-center shrink-0 shadow-[0_0_20px_rgba(124,58,237,0.4)]">
             <Sparkles className="w-6 h-6 text-white" />
           </div>
@@ -70,16 +72,18 @@ export function Sidebar() {
         </div>
 
         {/* Navigation */}
-        <ScrollArea className="flex-1 px-6 py-4">
-          <nav className="flex flex-col gap-3">
+        <ScrollArea className="flex-1 px-4 py-4">
+          <nav className="flex flex-col gap-2">
             {navItems.map((item) => {
               const isActive = pathname === item.href
               return (
                 <Link
                   key={item.href}
                   href={item.href}
+                  title={collapsed ? item.label : undefined}
                   className={cn(
-                    'relative flex items-center gap-5 px-5 py-4 rounded-2xl',
+                    'relative flex items-center gap-4 py-4 rounded-2xl',
+                    collapsed ? 'px-4 justify-center' : 'px-8',
                     'text-lg font-medium transition-all duration-300',
                     'group overflow-hidden',
                     isActive

@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { PageTransition } from '@/components/layout/page-transition'
+import { PageWrapper } from '@/components/layout/page-wrapper'
 import { BookCard } from '@/components/ebooks/book-card'
 import { UploadZone } from '@/components/ebooks/upload-zone'
 import { BookOpen } from 'lucide-react'
@@ -21,7 +22,7 @@ export default async function EbooksPage() {
 
   return (
     <PageTransition>
-      <div className="space-y-8 max-w-7xl">
+      <PageWrapper className="space-y-8">
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
           <div className="space-y-1">
@@ -66,7 +67,7 @@ export default async function EbooksPage() {
             </p>
           </div>
         )}
-      </div>
+      </PageWrapper>
     </PageTransition>
   )
 }
