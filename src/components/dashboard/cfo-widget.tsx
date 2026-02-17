@@ -74,7 +74,7 @@ export function CFOWidget({ data }: CFOWidgetProps) {
                     <Tooltip 
                       cursor={{fill: 'transparent'}}
                       contentStyle={{ backgroundColor: '#0f172a', borderColor: '#334155', borderRadius: '8px', color: '#f8fafc', fontSize: '12px' }}
-                      formatter={(value: number) => [formatCurrency(value), 'Valor']}
+                      formatter={(value: number | undefined) => [formatCurrency(value || 0), 'Valor']}
                       labelStyle={{ display: 'none' }}
                     />
                     <Bar dataKey="value" radius={[4, 4, 0, 0]}>
