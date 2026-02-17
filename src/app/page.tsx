@@ -28,33 +28,40 @@ export default async function DashboardPage() {
         <BentoGrid>
           
           {/* 1. Widget de Boas-Vindas (Big Span) */}
-          <BentoCard className="md:col-span-2 lg:col-span-2 row-span-1 min-h-[180px]">
+          <BentoCard 
+            id="welcome"
+            colSpan={2}
+            className="min-h-[180px]"
+          >
             <WelcomeWidget userName={data.user.name} />
           </BentoCard>
 
           {/* 2. Widget CFO (Finanças) */}
           <BentoCard 
+            id="finance"
             title="Situação Financeira" 
             icon={<Wallet />}
-            className="md:col-span-1 lg:col-span-1"
+            colSpan={1}
           >
             <CFOWidget data={data.finance} />
           </BentoCard>
 
           {/* 3. Widget Segundo Cérebro (Notas) */}
           <BentoCard 
+            id="notes"
             title="Segundo Cérebro" 
             icon={<BrainCircuit />}
-            className="md:col-span-1 lg:col-span-1"
+            colSpan={1}
           >
             <NotesWidget notes={data.notes} />
           </BentoCard>
 
           {/* 4. Widget Media & Games (Jogos) - Agora na linha 2 se precisar, ou fluindo */}
           <BentoCard 
+            id="games"
             title="Jogando Agora" 
             icon={<Gamepad2 />}
-            className="md:col-span-1 lg:col-span-1"
+            colSpan={1}
           >
            <GamesWidget games={data.games} />
           </BentoCard>
